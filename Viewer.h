@@ -2,7 +2,7 @@
 #define VIEWER_H
 
 #include <QMainWindow>
-
+#include "Trigger.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,5 +25,6 @@ private slots:
 
 private:
     Ui::Viewer *ui;
+    Trigger triggy{400};
 };
 #endif // VIEWER_H
