@@ -18,10 +18,12 @@ find_package(OpenCV REQUIRED)
 set(PROJECT_SOURCES
         main.cpp
         Viewer.cpp
+        Pendulum.cpp
         Viewer.h
         Viewer.ui
         Trigger.h
         Constants.h
+        Pendulum.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

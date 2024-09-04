@@ -6,6 +6,7 @@ Viewer::Viewer(QWidget *parent)
     ui->setupUi(this); 
     connect(&triggy, SIGNAL(sMsgArrived()), this, SLOT(sMessage()));
     triggy.Start();
+    bob.start();
 }
 
 Viewer::~Viewer() { 
@@ -13,6 +14,12 @@ Viewer::~Viewer() {
     delete ui;
 }
 
-void Viewer::sMessage() { ; }
+void Viewer::sMessage() { 
+    auto p  = bob.actual_position();
+    QString msg = QString("the position is("
+                        + QString::number(p.first) + ","
+                        +QString::number(p.second)+ ")" );
+    ui->label->setText(msg); 
+}
 
 void Viewer::on_pushButton_clicked(){ ; }
