@@ -5,40 +5,15 @@
 #include <mutex>
 #include <opencv2/opencv.hpp>
 #include "constants.h"
-
-namespace Sandbox { namespace imager {
-
-    cv::Scalar const color_black() noexcept { return cv::Scalar(0,0,0);};
-    cv::Scalar const color_white() noexcept { return cv::Scalar(255,255,255);};
-
-    class Image {
-       cv::Mat _image = cv::Mat(height, width, CV_16UC1);
-    public:
-        Image() = default;
-        virtual ~Image() = default;
-        Image(cv::Mat const& img) 
-                    : _image(img){};
-
-        cv::Mat image() {
-            const std::lock_guard<std::mutex> 
-            lock(mux); return _image;
-        }
-        void set_image(cv::Mat const& img) {
-            const std::lock_guard<std::mutex> 
-            lock(mux); _image = img; 
-        }
-    };
-}}
-
 cv::Mat createPendulumImage(float const& first,
                             float const& second){
-    uint32_t imageWidth  = 1024;//1024;
-    uint32_t imageHeight = 512;//512;
+    uint32_t imageWidth  = 1024; 
+    uint32_t imageHeight = 512; 
 
-    float   markerXDistance = 0.94;
-    float   markerYDistance = 0.92;
-    float   rectangleXDistance = 0.77;
-    float   rectangleYDistance = 0.80;
+    float markerXDistance = 0.94;
+    float markerYDistance = 0.92;
+    float rectangleXDistance = 0.77;
+    float rectangleYDistance = 0.80;
     std::pair<float,float>
     pin_point{width/2, 0.01 * height};
 
@@ -67,9 +42,10 @@ cv::Mat createPendulumImage(float const& first,
     }
     uint32_t n = std::min(width, height);
     uint32_t markerSize = n * 0.025;
+    // draw the Pendulum
     cv::circle(image, cv::Point(first, second), markerSize, colorBlack, -1);
-    cv::line(image, cv::Point(pin_point.first, pin_point.second),
-                    cv::Point(first, second), colorBlack , 4);
+    cv::line(image,   cv::Point(pin_point.first, pin_point.second),
+                      cv::Point(first, second), colorBlack , 4);
 
     image.convertTo(image, CV_8UC1);
     return image;

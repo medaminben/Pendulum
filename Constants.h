@@ -1,6 +1,5 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#include <mutex>
 
 constexpr const float  gravity = 9.8;
 constexpr const float  FPS     = 60;
