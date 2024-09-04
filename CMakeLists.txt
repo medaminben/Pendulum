@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         Viewer.h
         Viewer.ui
         Trigger.h
+        Constants.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
