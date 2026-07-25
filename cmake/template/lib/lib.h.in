@@ -1,0 +1,16 @@
+#ifndef ${lib_NAME_UPPER}_H
+#define ${lib_NAME_UPPER}_H
+
+#include <${lib_ROOT_NAME}/${lib_NAME}/${lib_ROOT_NAME}_${lib_NAME}_export.h>
+
+namespace ${lib_ROOT_NAME} {
+namespace ${lib_NAME} {
+
+unsigned int ${lib_ROOT_NAME_UPPER}_${lib_NAME_UPPER}_API get_the_answer();
+
+int ${lib_ROOT_NAME_UPPER}_${lib_NAME_UPPER}_API multiply(int lhs, int rhs);
+
+}  // namespace ${lib_NAME}
+}  // namespace ${lib_ROOT_NAME}
+
+#endif  // ${lib_NAME_UPPER}_H

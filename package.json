@@ -1,0 +1,26 @@
+{
+  "name": "pendulum",
+  "private": true,
+  "description": "Dev tooling for Pendulum / UnitPro (format hooks, commit lint)",
+  "scripts": {
+    "prepare": "husky",
+    "format": "clang-format -i $(git ls-files '*.cpp' '*.h' '*.hpp' '*.cc' '*.cxx')",
+    "format:check": "clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.h' '*.hpp' '*.cc' '*.cxx')",
+    "lint:cmake": "node scripts/check-cmake-style.mjs",
+    "commitlint": "commitlint --edit"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0"
+  },
+  "lint-staged": {
+    "*.{cpp,h,hpp,cc,cxx}": [
+      "clang-format -i"
+    ],
+    "*.{cmake,txt}": [
+      "node scripts/check-cmake-style.mjs"
+    ]
+  }
+}

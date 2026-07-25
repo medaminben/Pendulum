@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ qt6-base-dev
+
+      - name: Configure
+        run: cmake --preset qt -DCMAKE_INSTALL_PREFIX=$PWD/install
+
+      - name: Build
+        run: cmake --build --preset qt --parallel
+
+      - name: Test
+        run: ctest --test-dir build/qt --output-on-failure
+
+      - name: Install package tree
+        run: cmake --install build/qt
+
+      - name: Package artifacts
+        run: |
+          tar -czf "pendulum-${GITHUB_REF_NAME}-linux-amd64.tar.gz" -C install .
+          echo "ARTIFACT=pendulum-${GITHUB_REF_NAME}-linux-amd64.tar.gz" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: ${{ env.ARTIFACT }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

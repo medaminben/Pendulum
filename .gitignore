@@ -11,94 +11,64 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Compiled libraries / shared objects
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
 *.a
 *.lib
+*.lai
+*.la
 
 # Executables
 *.exe
 *.out
 *.app
 
-# Idea CLion
-.idea
-cmake-build-*
-
-# Qt cache
+# IDE
+.idea/
+.vscode/
+*.user
 CMakeLists.txt.user
 CMakeLists.txt.user.*
+cmake-build-*
 
-# Build
-build/*
-3rdParty/*
-
-# Cmake 
-CMakeLists.txt.user
+# Build trees
+build/
+install/
+_deps/
+cmake-build-*/
+Testing/
 CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Testing
+CMakeFiles/
+CMakeScripts/
 Makefile
 cmake_install.cmake
 install_manifest.txt
-compile_commands.json
 CTestTestfile.cmake
-_deps/*
+compile_commands.json
+*.log
 
-# Compiled Lua sources
-luac.out
+# Coverage
+coverage/
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
-
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-#vscode
-.vscode
-
-#export 
+# Generated export headers (binary-dir preferred; ignore any in-tree leftovers)
 *_export.h
+
+# Node tooling
+node_modules/
+npm-debug.log*
+
+# Environment / machine-specific
+cmake/configs/env_vars.ini
+3rdParty/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db

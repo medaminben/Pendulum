@@ -1,0 +1,13 @@
+#include <${lib_ROOT_NAME}/${lib_NAME}/${lib_NAME}.h>
+
+#include <iostream>
+#include <string>
+
+int main() {
+    using namespace ${lib_ROOT_NAME};
+
+    std::cout << "UnitPro ${lib_NAME} console sample\n";
+    std::cout << "6 * 6 = " << ${lib_NAME}::multiply(6, 6) << '\n';
+    std::cout << "The answer is " << ${lib_NAME}::get_the_answer() << '\n';
+    return 0;
+}

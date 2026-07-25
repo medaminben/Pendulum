@@ -1,0 +1,108 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 29,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default (Makefiles, Release)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/default",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "ON",
+        "BUILD_APPS": "ON",
+        "BUILD_QT_UI": "OFF",
+        "BUILD_VERBOSE_OUTPUT": "OFF"
+      }
+    },
+    {
+      "name": "qt",
+      "displayName": "Qt UI (Release)",
+      "inherits": "default",
+      "binaryDir": "${sourceDir}/build/qt",
+      "cacheVariables": {
+        "BUILD_QT_UI": "ON"
+      }
+    },
+    {
+      "name": "ninja",
+      "displayName": "Ninja (Release)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "ON",
+        "BUILD_APPS": "ON",
+        "BUILD_QT_UI": "OFF",
+        "BUILD_VERBOSE_OUTPUT": "OFF"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "inherits": "default",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "coverage",
+      "displayName": "Coverage",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/build/coverage",
+      "cacheVariables": {
+        "ENABLE_COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "ci",
+      "displayName": "CI",
+      "inherits": "default",
+      "binaryDir": "${sourceDir}/build/ci",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "ENABLE_COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "ci-qt",
+      "displayName": "CI with Qt UI",
+      "inherits": "ci",
+      "binaryDir": "${sourceDir}/build/ci-qt",
+      "cacheVariables": {
+        "BUILD_QT_UI": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "default", "configurePreset": "default" },
+    { "name": "qt", "configurePreset": "qt" },
+    { "name": "ninja", "configurePreset": "ninja" },
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "coverage", "configurePreset": "coverage" },
+    { "name": "ci", "configurePreset": "ci" },
+    { "name": "ci-qt", "configurePreset": "ci-qt" }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "ci",
+      "configurePreset": "ci",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "ci-qt",
+      "configurePreset": "ci-qt",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}

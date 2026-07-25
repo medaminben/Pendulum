@@ -1,84 +1,53 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.29)
 
-project(viewer VERSION 0.1 LANGUAGES CXX)
+project(UnitPro VERSION 1.4.0 LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+# Global project name used by library aliases (UnitPro::Pendulum)
+set(CMAKE_ROOT_NAME ${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# ---------------------------------------------------------------------------
+# Build options
+# ---------------------------------------------------------------------------
+option(BUILD_SHARED_LIBS    "Build project libraries as shared libraries" ON)
+option(BUILD_APPS           "Build applications"                          ON)
+option(BUILD_VERBOSE_OUTPUT "Dump CMake variables and verbose make"       OFF)
+option(BUILD_TESTING        "Build and register unit tests"               ON)
+option(BUILD_QT_UI          "Build Qt-based applications (requires Qt)"   OFF)
+option(ENABLE_COVERAGE      "Enable code coverage instrumentation"        OFF)
+option(ENABLE_CLANG_TIDY    "Run clang-tidy during compilation"           OFF)
+option(GENERATE_SCAFFOLD    "Generate missing libraries from templates"   ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
-set(OpenCV_DIR "c:/opencv490")
-find_package(OpenCV REQUIRED)
+include(Common)
 
-set(PROJECT_SOURCES
-        main.cpp
-        Viewer.cpp
-        Pendulum.cpp
-        framework_adapter.cpp
-        Viewer.h
-        Viewer.ui
-        Trigger.h
-        Constants.h
-        Pendulum.h
-        framework_adapter.h
-        imager.h
-)
+# Libraries to generate / include. Add new names here for scaffold generation.
+set(UNITPRO_LIBRARIES Pendulum)
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(viewer
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+set(libraries_dir    ${CMAKE_SOURCE_DIR}/libraries)
+set(applications_dir ${CMAKE_SOURCE_DIR}/applications)
+set(template_dir     ${CMAKE_SOURCE_DIR}/cmake/template)
 
+if(GENERATE_SCAFFOLD)
+    generate_libraries(
+        LIBRARIES_LIST     ${UNITPRO_LIBRARIES}
+        LIBRARIES_LOCATION ${libraries_dir}
+        APPS_LOCATION      ${applications_dir}
+        TEMPLATE_LOCATION  ${template_dir}
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET viewer APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(viewer SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(viewer
-            ${PROJECT_SOURCES}
-        )
-    endif()
 endif()
 
-target_link_libraries(viewer
-    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-    PUBLIC   ${OpenCV_LIBS}
-)
-
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.viewer)
+if(EXISTS "${libraries_dir}/CMakeLists.txt")
+    add_subdirectory(${libraries_dir})
 endif()
-set_target_properties(viewer PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
 
-include(GNUInstallDirs)
-install(TARGETS viewer
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+if(BUILD_APPS AND EXISTS "${applications_dir}/CMakeLists.txt")
+    add_subdirectory(${applications_dir})
+endif()
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(viewer)
+include(InstallConfig)
+
+if(BUILD_VERBOSE_OUTPUT)
+    dump_cmake_vars(BuildLogEnd.log)
 endif()

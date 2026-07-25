@@ -1,0 +1,66 @@
+project(${lib_NAME} VERSION 1.1.0 LANGUAGES CXX)
+
+set(TARGET_NAME ${lib_NAME})
+
+set(TST_DISCOVER ON)
+###############################################################
+# Manage project files
+###############################################################
+set(TARGET_HEADERS
+    # private headers belong to "src"
+    src/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}_impl.h
+    # Public headers belong in: include/CMAKE_ROOT_NAME/...
+    # Other components and applications will add "include" 
+    # to their search path, and need to use  the following 
+    # kind of path: #include <CMAKE_ROOT_NAME/PROJECT_NAME/...>
+    include/${VAR_MARKER_START}CMAKE_ROOT_NAME${VAR_MARKER_END}/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}.h
+)
+
+set(TARGET_SOURCES
+    # Source files belong in "src", 
+    # they will never been seen or used by other components, 
+    src/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}.cpp
+    src/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}_impl.cpp
+)
+
+set(TARGET_RSC
+    # resources 
+    test/data/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}TestData.txt
+)
+
+##dependencies
+#private dependencies
+set(PRIVATE_DEPS
+)
+#public dependencies
+set(PUBLIC_DEPS
+)
+set(TARGET_FILES 
+    ${VAR_MARKER_START}TARGET_HEADERS${VAR_MARKER_END}
+    ${VAR_MARKER_START}TARGET_SOURCES${VAR_MARKER_END}
+)
+###############################################################
+# Manage testing files
+###############################################################
+set(TST_SOURCES
+    # C++ files containing test cases should start with test_ 
+    # to identify them more easily.
+    test/src/test_${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}.cpp
+)
+
+# Test dependencies other than the actual library
+set(TEST_DEPS
+)
+###############################################################
+# build
+###############################################################
+create_library(
+    LIB_NAME             ${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}
+    LIB_FILES            ${VAR_MARKER_START}TARGET_FILES${VAR_MARKER_END}   
+    PRIVATE_DEPENDENCIES ${VAR_MARKER_START}PRIVATE_DEPS${VAR_MARKER_END}
+    PUBLIC_DEPENDENCIES  ${VAR_MARKER_START}PUBLIC_DEPS${VAR_MARKER_END}
+    TEST_DISCOVER        ${VAR_MARKER_START}TST_DISCOVER${VAR_MARKER_END}
+    TEST_SOURCES         ${VAR_MARKER_START}TST_SOURCES${VAR_MARKER_END}  
+    TEST_DEPENDENCIES    ${VAR_MARKER_START}TEST_DEPS${VAR_MARKER_END}
+    LIB_RSC              ${VAR_MARKER_START}TARGET_RSC${VAR_MARKER_END}
+)

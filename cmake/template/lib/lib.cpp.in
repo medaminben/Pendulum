@@ -1,0 +1,17 @@
+#include "${lib_NAME}_impl.h"
+
+#include <${lib_ROOT_NAME}/${lib_NAME}/${lib_NAME}.h>
+
+namespace ${lib_ROOT_NAME} {
+namespace ${lib_NAME} {
+
+unsigned int get_the_answer() {
+    return get_the_answer_impl();
+}
+
+int multiply(int lhs, int rhs) {
+    return multiply_impl(lhs, rhs);
+}
+
+}  // namespace ${lib_NAME}
+}  // namespace ${lib_ROOT_NAME}

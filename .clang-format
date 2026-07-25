@@ -1,0 +1,25 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBraces: Attach
+ColumnLimit: 100
+DerivePointerAlignment: false
+IncludeBlocks: Preserve
+IndentWidth: 4
+PointerAlignment: Left
+SortIncludes: Never
+SpaceAfterCStyleCast: false
+SpaceBeforeCpp11BracedList: true
+Standard: c++20
+TabWidth: 4
+UseTab: Never
+---
+Language: Proto
+DisableFormat: true

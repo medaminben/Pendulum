@@ -1,0 +1,157 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Check formatting
+        run: |
+          mapfile -t files < <(git ls-files '*.cpp' '*.h' '*.hpp' '*.cc' '*.cxx')
+          if ((${#files[@]})); then
+            clang-format --dry-run --Werror "${files[@]}"
+          fi
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install JS tooling
+        run: npm install
+      - name: Commitlint (PR range)
+        if: github.event_name == 'pull_request'
+        run: |
+          npx commitlint --from "${{ github.event.pull_request.head.sha }}^" --to "${{ github.event.pull_request.head.sha }}" --verbose
+      - name: CMake style check
+        run: |
+          mapfile -t files < <(git ls-files '*.cmake' '*CMakeLists.txt')
+          node scripts/check-cmake-style.mjs "${files[@]}"
+      - name: Install clang-tidy and build tools
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy cmake g++
+      - name: Configure for compile_commands
+        run: cmake --preset ci
+      - name: Run clang-tidy
+        run: |
+          mapfile -t files < <(git ls-files 'libraries/**/*.cpp' 'applications/**/*.cpp')
+          if ((${#files[@]})); then
+            clang-tidy -p build/ci "${files[@]}" --quiet || true
+          fi
+
+  build-test:
+    name: Build & Test (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: gcc
+            cc: gcc
+            cxx: g++
+            packages: g++
+          - compiler: clang
+            cc: clang-18
+            cxx: clang++-18
+            packages: clang-18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake lcov ${{ matrix.packages }}
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: cmake --preset ci
+      - name: Build
+        run: cmake --build --preset ci --parallel
+      - name: Test
+        run: ctest --preset ci --output-on-failure
+      - name: Coverage report
+        if: matrix.compiler == 'gcc'
+        run: cmake --build --preset ci --target coverage
+      - name: Upload coverage HTML
+        if: matrix.compiler == 'gcc'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: build/ci/coverage/html
+          if-no-files-found: ignore
+      - name: Upload lcov info
+        if: matrix.compiler == 'gcc'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: build/ci/coverage/coverage.filtered.info
+          if-no-files-found: ignore
+
+  qt-ui:
+    name: Qt UI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt and build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ qt6-base-dev
+      - name: Configure
+        run: cmake --preset ci-qt
+      - name: Build
+        run: cmake --build --preset ci-qt --parallel
+      - name: Test
+        run: ctest --preset ci-qt --output-on-failure
+      - name: Install package tree
+        run: |
+          cmake --preset ci-qt -DCMAKE_INSTALL_PREFIX=$PWD/install
+          cmake --install build/ci-qt
+          test -x install/bin/Pendulum_Qt_UI || test -x install/bin/Pendulum_Console
+
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+      - name: Run cppcheck
+        run: |
+          cppcheck --enable=all --inconclusive --std=c++20 \
+            --error-exitcode=1 \
+            --suppress=missingIncludeSystem \
+            --suppress=unmatchedSuppression \
+            -I libraries/Pendulum/include \
+            libraries applications \
+            || true
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+      - name: Build for CodeQL
+        run: |
+          sudo apt-get install -y cmake g++
+          cmake --preset default
+          cmake --build --preset default --parallel
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3

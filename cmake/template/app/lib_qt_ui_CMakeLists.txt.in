@@ -1,0 +1,87 @@
+project(${lib_NAME}_Qt_UI VERSION 1.1.1 LANGUAGES CXX)
+
+# Don't use PROJECT_NAME as target name, 
+# using a proper executable name gives 
+# more freedom 
+set(EXECUTABLE_NAME ${VAR_MARKER_START}PROJECT_NAME${VAR_MARKER_END})
+add_project(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END} PROJECT_LIST)
+# will be used to check building it or not
+# will be needed in case of missing 3rdparty 
+# dependencies to reject the build (example of 
+# usage: an app depends on boost and boost is 
+# not available also better to  discard 
+# building here)
+set(BUILD_${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END} ${VAR_MARKER_START}BUILD_APPS${VAR_MARKER_END})
+#executable type
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_ENTRY "QT_ui")
+# Manage executable files
+# header files
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_HEADERS
+    mainwindow.h      
+)
+
+# source files
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_SOURCES
+    ${lib_NAME}_Qt_UI.cpp
+    mainwindow.cpp
+)
+
+# forme files
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_UI
+    mainwindow.ui
+)
+# ressources
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_RSC
+)
+
+# Use a library name as a dependency. 
+# The "::" in the name forces CMake to look
+# for a target instead of looking for bare 
+# library files on the filesystem, which can 
+# avoid some errors. Since CMake knows  the 
+# include paths and  the libraries  produced 
+# by the target, it will add them  automatically 
+# to the compiler and linker command lines.
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_DEPS 
+
+    ${VAR_MARKER_START}CMAKE_ROOT_NAME${VAR_MARKER_END}::${lib_NAME}
+
+    Qt${VAR_MARKER_START}QT_VERSION_MAJOR${VAR_MARKER_END}::Widgets
+    Qt${VAR_MARKER_START}QT_VERSION_MAJOR${VAR_MARKER_END}::Gui 
+    Qt${VAR_MARKER_START}QT_VERSION_MAJOR${VAR_MARKER_END}::Core
+)
+
+set(${VAR_MARKER_START}EXECUTABLE_NAME${VAR_MARKER_END}_BUILD_ARGS 
+    MANUAL_FINALIZATION
+)
+
+#################################################
+# Build all the projects
+#################################################
+
+foreach(item IN LISTS PROJECT_LIST)
+
+    if(BUILD_${VAR_MARKER_START}item${VAR_MARKER_END})
+        # create_application(
+        #     NAME  "PROJECT_x_NAME"
+        #     ENTRY ["Console" "QT_ui" "WX_ui" "Service"]
+        #     HEADERS "<header.h ...>""
+        #     SOURCES ">source.cpp ...>"
+        #     RESOURCES "<file.txt ...>"
+        #     UI "form.ui"     
+        #     BUILD_ARGS "<WIN32 ...>"
+        #     DEPENDENCIES "internal::dependencies" "third_party::dependencies"
+        # )
+        create_application(
+            NAME         ${VAR_MARKER_START}item${VAR_MARKER_END}
+            ENTRY         ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_ENTRY${VAR_MARKER_END}
+            HEADERS       ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_HEADERS${VAR_MARKER_END} 
+            SOURCES       ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_SOURCES${VAR_MARKER_END} 
+            RESOURCES     ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_RSC${VAR_MARKER_END}
+            UI            ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_UI${VAR_MARKER_END}    
+            BUILD_ARGS    ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_BUILD_ARGS${VAR_MARKER_END}
+            DEPENDENCIES  ${VAR_MARKER_START}${VAR_MARKER_START}item${VAR_MARKER_END}_DEPS${VAR_MARKER_END}       
+        )
+    endif()
+
+endforeach()
