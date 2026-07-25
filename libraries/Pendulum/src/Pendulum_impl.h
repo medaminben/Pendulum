@@ -21,9 +21,9 @@ struct Simulator::Impl {
     float angular_vel = 0.0F;
     float pos_x = 0.0F;
     float pos_y = 0.0F;
-    std::atomic_bool hold{false};
-    std::pair<float, float> pin{static_cast<float>(width) / 2.0F,
-                                0.01F * static_cast<float>(height)};
+    std::atomic_bool hold {false};
+    std::pair<float, float> pin {static_cast<float>(width) / 2.0F,
+                                 0.01F * static_cast<float>(height)};
 
     void update_xy() noexcept {
         pos_x = length * std::sin(angle);
@@ -49,8 +49,7 @@ struct Simulator::Impl {
     }
 
     void sleep_frame() const noexcept {
-        constexpr auto frame_ms =
-            static_cast<unsigned long>((1000.0F / fps) - 1.0F);
+        constexpr auto frame_ms = static_cast<unsigned long>((1000.0F / fps) - 1.0F);
         std::this_thread::sleep_for(std::chrono::milliseconds(frame_ms));
     }
 

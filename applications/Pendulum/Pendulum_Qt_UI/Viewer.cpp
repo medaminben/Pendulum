@@ -6,8 +6,7 @@
 #include <QPixmap>
 #include <QSizePolicy>
 
-Viewer::Viewer(QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::Viewer) {
+Viewer::Viewer(QWidget* parent) : QMainWindow(parent), ui(new Ui::Viewer) {
     ui->setupUi(this);
     connect(&trigger_, &Trigger::frameReady, this, &Viewer::onFrame);
     trigger_.start();

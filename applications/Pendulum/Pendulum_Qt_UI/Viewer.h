@@ -27,8 +27,8 @@ private slots:
 
 private:
     Ui::Viewer* ui;
-    Trigger trigger_{400};
-    UnitPro::Pendulum::Simulator bob_{{150.0F, 500.0F}};
+    Trigger trigger_ {400};
+    UnitPro::Pendulum::Simulator bob_ {{150.0F, 500.0F}};
 };
 
 #endif  // VIEWER_H

@@ -5,8 +5,7 @@
 namespace UnitPro {
 namespace Pendulum {
 
-Simulator::Simulator(std::pair<float, float> const& bob_pos) noexcept
-    : impl_(new Impl) {
+Simulator::Simulator(std::pair<float, float> const& bob_pos) noexcept : impl_(new Impl) {
     impl_->configure(bob_pos);
 }
 
@@ -30,17 +29,20 @@ void Simulator::start() {
     impl_->worker = std::thread([this]() { impl_->run(); });
 }
 
-void Simulator::step() { impl_->step(); }
+void Simulator::step() {
+    impl_->step();
+}
 
-void Simulator::set_hold(bool value) { impl_->hold.store(value); }
+void Simulator::set_hold(bool value) {
+    impl_->hold.store(value);
+}
 
 std::pair<float, float> Simulator::position() const noexcept {
     return impl_->position();
 }
 
 std::pair<float, float> Simulator::pin_point() noexcept {
-    return {static_cast<float>(width) / 2.0F,
-            0.01F * static_cast<float>(height)};
+    return {static_cast<float>(width) / 2.0F, 0.01F * static_cast<float>(height)};
 }
 
 }  // namespace Pendulum
