@@ -2,7 +2,7 @@
 
 https://github.com/user-attachments/assets/afd8e139-eb02-4788-b706-54277f482d8d
 
-Physics library and Qt viewer for a simple pendulum, structured with the [UnitPro](docs/ARCHITECTURE.md) template: public library API, private implementation, console/Qt apps, tests, install/export, and CI.
+Physics library and Qt viewer for a simple pendulum, structured with the [Motion](docs/ARCHITECTURE.md) template: public library API, private implementation, console/Qt apps, tests, install/export, and CI.
 
 ## Layout
 
@@ -11,11 +11,11 @@ Pendulum/
 ├── applications/Pendulum/
 │   ├── Pendulum_Console/   # CLI demo (library consumer)
 │   └── Pendulum_Qt_UI/     # Qt Viewer (UI only)
-├── libraries/Pendulum/     # Business logic (UnitPro::Pendulum)
+├── libraries/Pendulum/     # Business logic (Motion::Pendulum)
 │   ├── include/            # Public API
 │   ├── src/                # Private implementation
 │   └── test/               # GoogleTest
-├── cmake/                  # UnitPro build helpers + scaffolds
+├── cmake/                  # Motion build helpers + scaffolds
 └── .github/workflows/      # CI + release
 ```
 
@@ -48,14 +48,14 @@ cmake --build --preset qt
 ## Library usage
 
 ```cpp
-#include <UnitPro/Pendulum/Pendulum.h>
+#include <Motion/Pendulum/Pendulum.h>
 
-UnitPro::Pendulum::Simulator sim({150.0F, 500.0F});
+Motion::Pendulum::Simulator sim({150.0F, 500.0F});
 sim.start();
 auto const [x, y] = sim.position();
 ```
 
-Consumers link `UnitPro::Pendulum`.
+Consumers link `Motion::Pendulum`.
 
 ## Install / deploy
 
@@ -77,8 +77,8 @@ cmake --install build/qt
 Downstream:
 
 ```cmake
-find_package(UnitPro REQUIRED)
-target_link_libraries(my_app PRIVATE UnitPro::Pendulum)
+find_package(Motion REQUIRED)
+target_link_libraries(my_app PRIVATE Motion::Pendulum)
 ```
 
 Tagged releases (`v*`) build, test, install, and publish a Linux tarball via `.github/workflows/release.yml`.

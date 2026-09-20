@@ -1,15 +1,15 @@
-#ifndef UNITPRO_PENDULUM_H
-#define UNITPRO_PENDULUM_H
+#ifndef MOTION_PENDULUM_H
+#define MOTION_PENDULUM_H
 
-#include <UnitPro/Pendulum/UnitPro_Pendulum_export.h>
+#include <Motion/Pendulum/Motion_Pendulum_export.h>
 
 #include <utility>
 
-namespace UnitPro {
+namespace Motion {
 namespace Pendulum {
 
 /// Physics simulation of a simple pendulum (no UI / rendering).
-class UNITPRO_PENDULUM_API Simulator {
+class MOTION_PENDULUM_API Simulator {
 public:
     explicit Simulator(std::pair<float, float> const& bob_pos) noexcept;
     ~Simulator();
@@ -40,6 +40,6 @@ private:
 };
 
 }  // namespace Pendulum
-}  // namespace UnitPro
+}  // namespace Motion
 
-#endif  // UNITPRO_PENDULUM_H
+#endif  // MOTION_PENDULUM_H

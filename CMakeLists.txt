@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.29)
 
-project(UnitPro VERSION 1.4.0 LANGUAGES CXX)
+project(Motion VERSION 1.4.0 LANGUAGES CXX)
 
-# Global project name used by library aliases (UnitPro::Pendulum)
+# Global project name used by library aliases (Motion::Pendulum)
 set(CMAKE_ROOT_NAME ${PROJECT_NAME})
 
 # ---------------------------------------------------------------------------
@@ -23,7 +23,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 include(Common)
 
 # Libraries to generate / include. Add new names here for scaffold generation.
-set(UNITPRO_LIBRARIES Pendulum)
+set(MOTION_LIBRARIES Pendulum)
 
 set(libraries_dir    ${CMAKE_SOURCE_DIR}/libraries)
 set(applications_dir ${CMAKE_SOURCE_DIR}/applications)
@@ -31,7 +31,7 @@ set(template_dir     ${CMAKE_SOURCE_DIR}/cmake/template)
 
 if(GENERATE_SCAFFOLD)
     generate_libraries(
-        LIBRARIES_LIST     ${UNITPRO_LIBRARIES}
+        LIBRARIES_LIST     ${MOTION_LIBRARIES}
         LIBRARIES_LOCATION ${libraries_dir}
         APPS_LOCATION      ${applications_dir}
         TEMPLATE_LOCATION  ${template_dir}

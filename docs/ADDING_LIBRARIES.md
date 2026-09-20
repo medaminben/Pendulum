@@ -5,7 +5,7 @@
 1. Edit the root `CMakeLists.txt` and append a name:
 
 ```cmake
-set(UNITPRO_LIBRARIES Core Math)
+set(MOTION_LIBRARIES Core Math)
 ```
 
 2. Reconfigure:
@@ -19,7 +19,7 @@ cmake --preset default
 ```
 libraries/Math/
   CMakeLists.txt
-  include/UnitPro/Math/Math.h
+  include/Motion/Math/Math.h
   src/Math.cpp
   src/Math_impl.h
   src/Math_impl.cpp
@@ -44,13 +44,13 @@ ctest --preset default --output-on-failure
 
 | Location | Visibility | Include style |
 |----------|------------|---------------|
-| `include/UnitPro/<Lib>/` | Public | `#include <UnitPro/Lib/Lib.h>` |
+| `include/Motion/<Lib>/` | Public | `#include <Motion/Lib/Lib.h>` |
 | `src/` | Private | `#include "Lib_impl.h"` |
 
 Keep export macros on public symbols only:
 
 ```cpp
-int UNITPRO_MATH_API multiply(int lhs, int rhs);
+int MOTION_MATH_API multiply(int lhs, int rhs);
 ```
 
 ## Wire custom dependencies

@@ -11,6 +11,7 @@ public:
     explicit Trigger(int duration_ms, QObject* parent = nullptr)
         : QObject(parent), interval_ms_(duration_ms) {
         timer_ = new QTimer(this);
+        timer_->setTimerType(Qt::PreciseTimer);
         connect(timer_, &QTimer::timeout, this, &Trigger::onTimeout);
     }
 

@@ -21,7 +21,7 @@ Trigger: push tag matching `v*` (example: `v1.4.0`).
 1. Configure with install prefix
 2. Build and test
 3. `cmake --install`
-4. Pack `unitpro-<tag>-linux-amd64.tar.gz`
+4. Pack `motion-<tag>-linux-amd64.tar.gz`
 5. Create GitHub Release with notes + artifact
 
 ```bash

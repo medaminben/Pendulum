@@ -1,8 +1,8 @@
-#include <UnitPro/Pendulum/Pendulum.h>
+#include <Motion/Pendulum/Pendulum.h>
 
 #include "Pendulum_impl.h"
 
-namespace UnitPro {
+namespace Motion {
 namespace Pendulum {
 
 Simulator::Simulator(std::pair<float, float> const& bob_pos) noexcept : impl_(new Impl) {
@@ -46,4 +46,4 @@ std::pair<float, float> Simulator::pin_point() noexcept {
 }
 
 }  // namespace Pendulum
-}  // namespace UnitPro
+}  // namespace Motion

@@ -23,7 +23,7 @@ Viewer::~Viewer() {
 
 void Viewer::onFrame() {
     auto const [x, y] = bob_.position();
-    auto const pin = UnitPro::Pendulum::Simulator::pin_point();
+    auto const pin = Motion::Pendulum::Simulator::pin_point();
     QImage const image = createPendulumImage(x, y, pin.first, pin.second);
     ui->label->setPixmap(QPixmap::fromImage(image));
 }
@@ -31,10 +31,7 @@ void Viewer::onFrame() {
 void Viewer::on_pushButton_clicked() {
     if (trigger_.isRunning()) {
         trigger_.stop();
-        bob_.set_hold(true);
     } else {
-        bob_.set_hold(false);
-        bob_.start();
         trigger_.start();
     }
 }

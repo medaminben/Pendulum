@@ -1,12 +1,12 @@
 include(FetchContent)
 
 # Pin GoogleTest for reproducible builds (do not track `main`).
-set(UNITPRO_GTEST_VERSION "v1.15.2" CACHE STRING "GoogleTest git tag")
+set(MOTION_GTEST_VERSION "v1.15.2" CACHE STRING "GoogleTest git tag")
 
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        ${UNITPRO_GTEST_VERSION}
+    GIT_TAG        ${MOTION_GTEST_VERSION}
     GIT_SHALLOW    TRUE
 )
 

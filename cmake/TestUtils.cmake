@@ -1,9 +1,9 @@
 include(GTestSupport)
 
 # build_gtest_executable(
-#   NAME test_unitpro_core
+#   NAME test_motion_core
 #   SRC  test/src/test_Core.cpp
-#   DEPENDS UnitPro::Core GTest::gtest ...
+#   DEPENDS Motion::Core GTest::gtest ...
 #   DISCOVER ON
 # )
 function(build_gtest_executable)

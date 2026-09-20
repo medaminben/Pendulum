@@ -1,8 +1,8 @@
 #ifndef PENDULUM_IMPL_H
 #define PENDULUM_IMPL_H
 
-#include <UnitPro/Pendulum/Constants.h>
-#include <UnitPro/Pendulum/Pendulum.h>
+#include <Motion/Pendulum/Constants.h>
+#include <Motion/Pendulum/Pendulum.h>
 
 #include <atomic>
 #include <chrono>
@@ -10,7 +10,7 @@
 #include <thread>
 #include <utility>
 
-namespace UnitPro {
+namespace Motion {
 namespace Pendulum {
 
 struct Simulator::Impl {
@@ -66,6 +66,6 @@ struct Simulator::Impl {
 };
 
 }  // namespace Pendulum
-}  // namespace UnitPro
+}  // namespace Motion
 
 #endif  // PENDULUM_IMPL_H

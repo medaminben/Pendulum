@@ -1,7 +1,7 @@
 {
   "name": "pendulum",
   "private": true,
-  "description": "Dev tooling for Pendulum / UnitPro (format hooks, commit lint)",
+  "description": "Dev tooling for Pendulum / Motion (format hooks, commit lint)",
   "scripts": {
     "prepare": "husky",
     "format": "clang-format -i $(git ls-files '*.cpp' '*.h' '*.hpp' '*.cc' '*.cxx')",

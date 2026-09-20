@@ -1,6 +1,6 @@
 # Migration guide (≤ 1.3 → 1.4)
 
-This guide explains how to move an existing UnitPro-based tree onto the 1.4 boilerplate.
+This guide explains how to move an existing Motion-based tree onto the 1.4 boilerplate.
 
 ## Summary of breaking / notable changes
 
@@ -11,11 +11,11 @@ This guide explains how to move an existing UnitPro-based tree onto the 1.4 boil
 | GoogleTest | `GIT_TAG main` | Pinned `v1.15.2` |
 | Network probe | Ping `www.google.com` | Removed; use `FETCHCONTENT_FULLY_DISCONNECTED` if needed |
 | Export headers | Written into source `include/` | Generated under the **build** tree |
-| Public include | `"UnitPro_Core_export.h"` (relative) | `<UnitPro/Core/UnitPro_Core_export.h>` |
+| Public include | `"Motion_Core_export.h"` (relative) | `<Motion/Core/Motion_Core_export.h>` |
 | Verbose build | Default `ON` | Default `OFF` |
-| Warnings | Global `-Wall -Werror` flags | Per-target via `unitpro_set_warnings` |
+| Warnings | Global `-Wall -Werror` flags | Per-target via `motion_set_warnings` |
 | Generator module | `cmake/libraryGenerator.cmake` | `cmake/modules/LibraryGenerator.cmake` |
-| Install/export | Missing | `InstallConfig` + `UnitProConfig.cmake` |
+| Install/export | Missing | `InstallConfig` + `MotionConfig.cmake` |
 | Docs folder | Requirements PDFs | Architecture / contributing docs |
 | CI | None | GitHub Actions CI + release |
 
@@ -23,7 +23,7 @@ This guide explains how to move an existing UnitPro-based tree onto the 1.4 boil
 
 ### 1. Update the root project
 
-- Bump `project(UnitPro VERSION …)` or rename `CMAKE_ROOT_NAME` if you forked under another brand.
+- Bump `project(Motion VERSION …)` or rename `CMAKE_ROOT_NAME` if you forked under another brand.
 - Replace ad-hoc options with the 1.4 option set (`ENABLE_COVERAGE`, `GENERATE_SCAFFOLD`, …).
 - Point `CMAKE_MODULE_PATH` at both `cmake/` and `cmake/modules/`.
 
@@ -41,10 +41,10 @@ In every public header:
 
 ```cpp
 // old
-#include "UnitPro_Core_export.h"
+#include "Motion_Core_export.h"
 
 // new
-#include <UnitPro/Core/UnitPro_Core_export.h>
+#include <Motion/Core/Motion_Core_export.h>
 ```
 
 Remove tracked `*_export.h` files from the source tree; they are generated at build time and gitignored.
@@ -73,7 +73,7 @@ create_application(
     NAME         Core_Console
     ENTRY        Console
     SOURCES      Core_Console.cpp
-    DEPENDENCIES UnitPro::Core
+    DEPENDENCIES Motion::Core
 )
 ```
 

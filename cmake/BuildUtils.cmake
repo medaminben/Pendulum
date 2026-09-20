@@ -32,7 +32,7 @@ macro(add_project name name_list)
     list(APPEND ${name_list} ${name})
 endmacro()
 
-# Convert "UnitPro::Core" -> "unitpro_core" for add_library().
+# Convert "Motion::Core" -> "motion_core" for add_library().
 macro(get_raw_target_name qualified_name out_var)
     string(REPLACE "::" "_" ${out_var} ${qualified_name})
     string(TOLOWER ${${out_var}} ${out_var})
@@ -92,7 +92,7 @@ function(create_library)
         PUBLIC  ${parameter_PUBLIC_DEPENDENCIES}
     )
 
-    unitpro_set_warnings(${LIBRARY_NAME_RAW})
+    motion_set_warnings(${LIBRARY_NAME_RAW})
 
     set_target_properties(${LIBRARY_NAME_RAW} PROPERTIES
         OUTPUT_NAME "${CMAKE_ROOT_NAME}${parameter_LIB_NAME}"
@@ -159,7 +159,7 @@ function(create_application)
         if(DEFINED app_DEPENDENCIES AND NOT app_DEPENDENCIES STREQUAL "")
             target_link_libraries(${app_NAME} PRIVATE ${app_DEPENDENCIES})
         endif()
-        unitpro_set_warnings(${app_NAME})
+        motion_set_warnings(${app_NAME})
 
     elseif(BUILD_QT_UI AND app_ENTRY STREQUAL "QT_ui")
         qt_add_executable(${app_NAME} ${app_BUILD_ARGS} ${PROJECT_FILES})
@@ -170,6 +170,6 @@ function(create_application)
             WIN32_EXECUTABLE TRUE
             MACOSX_BUNDLE TRUE
         )
-        unitpro_set_warnings(${app_NAME})
+        motion_set_warnings(${app_NAME})
     endif()
 endfunction()

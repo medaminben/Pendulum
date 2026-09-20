@@ -1,6 +1,6 @@
 # Architecture
 
-UnitPro follows Clean Architecture principles adapted for C++ libraries and CMake.
+Motion follows Clean Architecture principles adapted for C++ libraries and CMake.
 
 ## Goals
 
@@ -37,11 +37,11 @@ flowchart TD
 
 ## SOLID mapping
 
-| Principle | How UnitPro applies it |
+| Principle | How Motion applies it |
 |-----------|------------------------|
 | **S**ingle Responsibility | One library folder = one bounded component; apps only orchestrate |
-| **O**pen/Closed | Extend via new libraries in `UNITPRO_LIBRARIES`, not by editing Core |
-| **L**iskov | CMake aliases (`UnitPro::Core`) keep consumer contracts stable |
+| **O**pen/Closed | Extend via new libraries in `MOTION_LIBRARIES`, not by editing Core |
+| **L**iskov | CMake aliases (`Motion::Core`) keep consumer contracts stable |
 | **I**nterface Segregation | Thin public headers; heavy details stay in `*_impl` |
 | **D**ependency Inversion | Apps and tests depend on the public API, not on private sources |
 
@@ -60,7 +60,7 @@ flowchart TD
 | `cmake/modules/LibraryGenerator.cmake` | Scaffold from `cmake/template/` |
 | `cmake/modules/CompilerWarnings.cmake` | Strict warnings as errors |
 | `cmake/modules/Coverage.cmake` | gcov / lcov target |
-| `cmake/modules/InstallConfig.cmake` | `find_package(UnitPro)` export |
+| `cmake/modules/InstallConfig.cmake` | `find_package(Motion)` export |
 | `cmake/GTestSupport.cmake` | Pinned GoogleTest via FetchContent |
 | `cmake/TestUtils.cmake` | `build_gtest_executable` |
 
@@ -68,16 +68,16 @@ flowchart TD
 
 | Kind | Pattern | Example |
 |------|---------|---------|
-| CMake alias | `UnitPro::<Lib>` | `UnitPro::Core` |
-| Raw target | lowercase with `_` | `unitpro_core` |
-| Test executable | `test_<raw>` | `test_unitpro_core` |
-| Export header | `UnitPro_<Lib>_export.h` | generated in build tree |
-| Namespaces | `UnitPro::<Lib>` | `UnitPro::Core::multiply` |
+| CMake alias | `Motion::<Lib>` | `Motion::Core` |
+| Raw target | lowercase with `_` | `motion_core` |
+| Test executable | `test_<raw>` | `test_motion_core` |
+| Export header | `Motion_<Lib>_export.h` | generated in build tree |
+| Namespaces | `Motion::<Lib>` | `Motion::Core::multiply` |
 
 ## Dependency rules
 
-1. `applications/` may depend on `UnitPro::*` libraries.
-2. Libraries may depend on other `UnitPro::*` libraries only through **public** or **private** CMake dependency lists — never by including another library’s `src/`.
+1. `applications/` may depend on `Motion::*` libraries.
+2. Libraries may depend on other `Motion::*` libraries only through **public** or **private** CMake dependency lists — never by including another library’s `src/`.
 3. Tests link the library under test + GoogleTest; they must not include `*_impl` headers unless testing internals on purpose.
 4. Third-party packages are introduced via `find_package` / FetchContent with **pinned** versions.
 

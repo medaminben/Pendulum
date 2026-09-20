@@ -1,18 +1,21 @@
 #include "Imager.h"
 
-#include <UnitPro/Pendulum/Constants.h>
+#include <Motion/Pendulum/Constants.h>
 
 #include <QPainter>
 #include <algorithm>
-#include <cmath>
+#include <cstring>
 
-QImage createPendulumImage(float bob_x, float bob_y, float pin_x, float pin_y) {
-    using UnitPro::Pendulum::height;
-    using UnitPro::Pendulum::width;
+namespace {
+
+QImage makeGradientBackground() {
+    using Motion::Pendulum::height;
+    using Motion::Pendulum::width;
 
     QImage image(static_cast<int>(width), static_cast<int>(height), QImage::Format_Grayscale8);
 
     int const rows = image.height();
+    int const cols = image.width();
     unsigned short const period = static_cast<unsigned short>(std::max(1, rows / 255));
     unsigned short step = 0;
     int intensity = 255;
@@ -24,12 +27,24 @@ QImage createPendulumImage(float bob_x, float bob_y, float pin_x, float pin_y) {
             step = 0;
             --intensity;
         }
-        uchar* row = image.scanLine(y);
         auto const value = static_cast<uchar>(std::max(0, intensity));
-        for (int x = 0; x < image.width(); ++x) {
-            row[x] = value;
-        }
+        std::memset(image.scanLine(y), value, static_cast<std::size_t>(cols));
     }
+    return image;
+}
+
+QImage const& gradientBackground() {
+    static QImage const background = makeGradientBackground();
+    return background;
+}
+
+}  // namespace
+
+QImage createPendulumImage(float bob_x, float bob_y, float pin_x, float pin_y) {
+    using Motion::Pendulum::height;
+    using Motion::Pendulum::width;
+
+    QImage image = gradientBackground().copy();
 
     int const marker_size = static_cast<int>(0.025 * static_cast<double>(std::min(width, height)));
 
