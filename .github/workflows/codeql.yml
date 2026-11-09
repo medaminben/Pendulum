@@ -1,0 +1,27 @@
+# CodeQL analysis of the C++ code through buildkit's reusable workflow.
+name: CodeQL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    uses: medaminben/buildkit/.github/workflows/codeql.yml@v2.0.0
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    with:
+      preset: default
