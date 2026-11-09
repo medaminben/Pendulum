@@ -1,6 +1,6 @@
 #include "Imager.h"
 
-#include <Motion/Pendulum/Constants.h>
+#include <Pendulum/Constants.h>
 
 #include <QPainter>
 #include <algorithm>
@@ -9,8 +9,8 @@
 namespace {
 
 QImage makeGradientBackground() {
-    using Motion::Pendulum::height;
-    using Motion::Pendulum::width;
+    using Pendulum::height;
+    using Pendulum::width;
 
     QImage image(static_cast<int>(width), static_cast<int>(height), QImage::Format_Grayscale8);
 
@@ -41,8 +41,8 @@ QImage const& gradientBackground() {
 }  // namespace
 
 QImage createPendulumImage(float bob_x, float bob_y, float pin_x, float pin_y) {
-    using Motion::Pendulum::height;
-    using Motion::Pendulum::width;
+    using Pendulum::height;
+    using Pendulum::width;
 
     QImage image = gradientBackground().copy();
 

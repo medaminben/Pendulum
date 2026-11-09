@@ -3,8 +3,8 @@
 
 #include "Trigger.h"
 
-#include <Motion/Pendulum/Constants.h>
-#include <Motion/Pendulum/Pendulum.h>
+#include <Pendulum/Constants.h>
+#include <Pendulum/Pendulum.h>
 
 #include <QMainWindow>
 
@@ -28,8 +28,8 @@ private slots:
 
 private:
     Ui::Viewer* ui;
-    Trigger trigger_ {static_cast<int>(1000.0F / Motion::Pendulum::fps)};
-    Motion::Pendulum::Simulator bob_ {{150.0F, 500.0F}};
+    Trigger trigger_ {static_cast<int>(1000.0F / Pendulum::fps)};
+    Pendulum::Simulator bob_ {{150.0F, 500.0F}};
 };
 
 #endif  // VIEWER_H

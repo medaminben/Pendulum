@@ -1,9 +1,9 @@
-#include <Motion/Pendulum/Pendulum.h>
+#include <Pendulum/Pendulum.h>
 
 #include <iostream>
 
 int main() {
-    using Motion::Pendulum::Simulator;
+    using Pendulum::Simulator;
 
     Simulator sim({150.0F, 500.0F});
     std::cout << "Pendulum console demo (10 steps)\n";

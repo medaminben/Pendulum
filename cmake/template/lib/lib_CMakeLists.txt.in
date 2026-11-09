@@ -9,11 +9,11 @@ set(TST_DISCOVER ON)
 set(TARGET_HEADERS
     # private headers belong to "src"
     src/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}_impl.h
-    # Public headers belong in: include/CMAKE_ROOT_NAME/...
+    # Public headers belong in: include/PROJECT_NAME/...
     # Other components and applications will add "include" 
     # to their search path, and need to use  the following 
-    # kind of path: #include <CMAKE_ROOT_NAME/PROJECT_NAME/...>
-    include/${VAR_MARKER_START}CMAKE_ROOT_NAME${VAR_MARKER_END}/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}.h
+    # kind of path: #include <PROJECT_NAME/...>
+    include/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}/${VAR_MARKER_START}TARGET_NAME${VAR_MARKER_END}.h
 )
 
 set(TARGET_SOURCES

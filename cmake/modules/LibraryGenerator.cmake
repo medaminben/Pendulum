@@ -71,12 +71,12 @@ function(generate_library)
     endif()
 
     if(NOT DEFINED lib_ROOT_NAME OR lib_ROOT_NAME STREQUAL "")
-        set(lib_ROOT_NAME Motion)
+        set(lib_ROOT_NAME ${lib_NAME})
         message(WARNING
-            "${lib_NAME}: ROOT_NAME missing; defaulting to Motion")
+            "${lib_NAME}: ROOT_NAME missing; defaulting to the library name")
     endif()
 
-    set(lib_include_DIR ${lib_DIR}/include/${lib_ROOT_NAME}/${lib_NAME})
+    set(lib_include_DIR ${lib_DIR}/include/${lib_NAME})
     set(lib_source_DIR  ${lib_DIR}/src)
     set(lib_test_DIR    ${lib_DIR}/test)
     set(lib_gen_DIR     ${lib_CFG_SRC}/lib)

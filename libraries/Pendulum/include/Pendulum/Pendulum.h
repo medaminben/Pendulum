@@ -1,15 +1,14 @@
-#ifndef MOTION_PENDULUM_H
-#define MOTION_PENDULUM_H
+#ifndef PENDULUM_H
+#define PENDULUM_H
 
-#include <Motion/Pendulum/Motion_Pendulum_export.h>
+#include <Pendulum/Pendulum_export.h>
 
 #include <utility>
 
-namespace Motion {
 namespace Pendulum {
 
 /// Physics simulation of a simple pendulum (no UI / rendering).
-class MOTION_PENDULUM_API Simulator {
+class PENDULUM_API Simulator {
 public:
     explicit Simulator(std::pair<float, float> const& bob_pos) noexcept;
     ~Simulator();
@@ -40,6 +39,5 @@ private:
 };
 
 }  // namespace Pendulum
-}  // namespace Motion
 
-#endif  // MOTION_PENDULUM_H
+#endif  // PENDULUM_H
