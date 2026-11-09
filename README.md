@@ -2,6 +2,8 @@
 
 <p align="center">
   <a href="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/medaminben/Pendulum/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/medaminben/Pendulum/actions/workflows/codeql.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/medaminben/Pendulum/releases/latest"><img alt="release" src="https://img.shields.io/github/v/release/medaminben/Pendulum"></a>
   <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-00599C">
   <img alt="CMake 3.29" src="https://img.shields.io/badge/CMake-3.29-064F8C">
   <img alt="Qt 5 | 6" src="https://img.shields.io/badge/Qt-5%20%7C%206-41CD52">
@@ -14,12 +16,14 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="docs/">Docs</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/CI_CD.md">CI/CD</a>
+  <a href="docs/CI_CD.md">CI/CD</a> ·
+  <a href="https://github.com/medaminben/Pendulum/releases">Changelog</a>
 </p>
 
 Pendulum simulates a simple pendulum. The `Pendulum::Pendulum` library steps the
 physics on a background thread at 60 steps per second; the Qt viewer draws the
-rod and the bob, and the console app prints the first ten positions.
+rod and the bob, and the console app prints the first ten positions. The build
+uses [buildkit](https://github.com/medaminben/buildkit).
 
 https://github.com/user-attachments/assets/afd8e139-eb02-4788-b706-54277f482d8d
 
@@ -28,7 +32,7 @@ https://github.com/user-attachments/assets/afd8e139-eb02-4788-b706-54277f482d8d
 Debian/Ubuntu:
 
 ```bash
-sudo apt install build-essential cmake git
+sudo apt install build-essential cmake git ninja-build
 cmake --preset default
 cmake --build --preset default
 ctest --preset default
@@ -51,10 +55,13 @@ in the background.
 | Tool | Version |
 |------|---------|
 | CMake | 3.29 or newer |
+| Ninja | any recent version (all presets use it) |
 | C++ compiler | C++20: GCC 12+ or Clang 15+ (CI uses GCC and Clang 18 on Ubuntu) |
 | Qt | 5 or 6, only for the viewer (`BUILD_QT_UI=ON`, preset `qt`) |
 
-GoogleTest v1.15.2 is downloaded at configure time.
+CMake loads [buildkit](https://github.com/medaminben/buildkit) from `BUILDKIT_DIR`, else a sibling checkout
+`../buildkit`, else it fetches the pinned tag `v2.0.0`. GoogleTest v1.15.2 is
+used when installed and fetched otherwise.
 
 ## Repository layout
 
@@ -107,7 +114,7 @@ cmake --install build/default
 | `BUILD_QT_UI` | `OFF` | Build `Pendulum_Qt_UI` |
 | `ENABLE_COVERAGE` | `OFF` | gcov instrumentation |
 | `ENABLE_CLANG_TIDY` | `OFF` | Run clang-tidy while compiling |
-| `GENERATE_SCAFFOLD` | `ON` | Create missing libraries from `cmake/template/` |
+| `GENERATE_SCAFFOLD` | `ON` | Create missing libraries from buildkit's templates |
 
 ## Documentation
 
@@ -116,7 +123,7 @@ cmake --install build/default
 | [docs/README.md](docs/README.md) | everyone | Index of all documents |
 | [Architecture](docs/architecture.md) | developers | Layers, targets, threading, dependency rules |
 | [Pendulum library](libraries/Pendulum/README.md) | library users | API, coordinates, invariants |
-| [Adding libraries](docs/ADDING_LIBRARIES.md) | developers | Scaffolding a new library |
+| [Adding libraries](https://github.com/medaminben/buildkit/blob/main/docs/ADDING_LIBRARIES.md) | developers | Scaffolding a new library (buildkit) |
 | [CI/CD](docs/CI_CD.md) | maintainers | Workflows, presets, releases |
 | [Contributing](CONTRIBUTING.md) | contributors | Workflow, style, commits |
 

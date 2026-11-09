@@ -26,7 +26,10 @@ explains how to report them privately.
 4. Update the documentation (`README.md`, `docs/architecture.md`,
    `libraries/Pendulum/README.md`) when behaviour, build options or the public
    API change.
-5. Open a pull request against `main`.
+5. Open a pull request against `main` and add one label for the size of the
+   change: `semver:major` (breaking change to the public API), `semver:minor`
+   (new feature), `semver:patch` (fix or refactor, the default) or
+   `semver:none` (docs or CI only, no release).
 
 `npm install` sets up the Git hooks:
 
@@ -67,9 +70,10 @@ Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`,
 
 ## Pull requests
 
-CI checks formatting, commit messages, CMake style, and builds and tests with
-GCC and Clang on Ubuntu. A pull request is merged once CI is green and a
-maintainer has reviewed it.
+CI checks formatting, commit messages and CMake style, and builds and tests
+with GCC and Clang on Ubuntu, with and without the Qt viewer, and under ASan
+and UBSan. A pull request is merged once CI is green and a maintainer has
+reviewed it. Each merged pull request is released with its own version.
 
 ## Code of conduct
 

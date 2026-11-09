@@ -12,7 +12,7 @@
 | Document | Topic |
 |----------|-------|
 | [Architecture](architecture.md) | Layers, viewer classes, targets, known issues |
-| [Adding libraries](ADDING_LIBRARIES.md) | Scaffolding a new library or app |
+| [Adding libraries](https://github.com/medaminben/buildkit/blob/main/docs/ADDING_LIBRARIES.md) | Scaffolding a new library or app (buildkit) |
 | [Contributing](../CONTRIBUTING.md) | Workflow, code style, commits |
 
 ## Maintainers
