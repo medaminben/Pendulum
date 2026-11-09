@@ -1,92 +1,87 @@
 # Architecture
 
-Motion follows Clean Architecture principles adapted for C++ libraries and CMake.
+Pendulum is one library and two applications on a small CMake template. The
+library steps the physics and reports the bob position; the applications
+print or draw that position.
 
-## Goals
-
-- **Reusable template** — clone and start a sandbox or product library quickly
-- **Clear boundaries** — public API vs private implementation vs applications
-- **Testability** — every library ships with GoogleTest by default
-- **Reproducibility** — pinned dependencies, CMake presets, CI parity
-
-## Layer diagram
+## Layers
 
 ```mermaid
 flowchart TD
-  Apps["applications/\nConsole / Qt UI"]
-  PublicAPI["libraries/*/include/\nPublic API"]
-  Impl["libraries/*/src/\nPrivate implementation"]
-  Tests["libraries/*/test/\nUnit tests"]
-  Build["cmake/\nBuild + scaffold"]
+  Qt["Pendulum_Qt_UI<br/>Viewer, Trigger, Imager"]
+  Console["Pendulum_Console"]
+  Lib["Pendulum::Pendulum<br/>include/ public API"]
+  Impl["src/ Simulator::Impl<br/>private"]
+  Tests["test_pendulum"]
 
-  Apps --> PublicAPI
-  Tests --> PublicAPI
-  PublicAPI --> Impl
-  Build --> PublicAPI
-  Build --> Apps
-  Build --> Tests
+  Qt --> Lib
+  Console --> Lib
+  Tests --> Lib
+  Lib --> Impl
 ```
 
 | Layer | Path | Responsibility |
 |-------|------|----------------|
-| Applications | `applications/` | Entry points; depend only on public library targets |
-| Public API | `libraries/*/include/` | Stable headers, export macros, namespaces |
-| Implementation | `libraries/*/src/` | Private logic (`*_impl`); not installed as public API |
-| Tests | `libraries/*/test/` | Unit tests against the public API |
-| Build system | `cmake/` | Targets, warnings, coverage, install, scaffolding |
+| Applications | `applications/Pendulum/` | Entry points; link only `Pendulum::Pendulum` (and Qt for the viewer) |
+| Public API | `libraries/Pendulum/include/Pendulum/` | `Simulator`, constants, export macro |
+| Implementation | `libraries/Pendulum/src/` | `Simulator::Impl`: state, physics step, worker thread |
+| Tests | `libraries/Pendulum/test/` | GoogleTest against the public API |
+| Build | `cmake/` | Target helpers, warnings, coverage, install, scaffolding |
 
-## SOLID mapping
+Dependencies point down only. The library does not include Qt; Qt stays in
+`Pendulum_Qt_UI`.
 
-| Principle | How Motion applies it |
-|-----------|------------------------|
-| **S**ingle Responsibility | One library folder = one bounded component; apps only orchestrate |
-| **O**pen/Closed | Extend via new libraries in `MOTION_LIBRARIES`, not by editing Core |
-| **L**iskov | CMake aliases (`Motion::Core`) keep consumer contracts stable |
-| **I**nterface Segregation | Thin public headers; heavy details stay in `*_impl` |
-| **D**ependency Inversion | Apps and tests depend on the public API, not on private sources |
+## The library
 
-## DRY / KISS / SoC
+`Simulator` hides its state behind a pimpl (`struct Impl`), so the public
+header carries no `<thread>` or `<atomic>`. The physics model, units and
+threading rules are in the [library README](../libraries/Pendulum/README.md).
 
-- **DRY** — `create_library` / `create_application` centralize target wiring
-- **KISS** — committed `Core` sample is minimal (`get_the_answer`, `multiply`)
-- **Separation of Concerns** — generation (`LibraryGenerator`) is separate from compilation (`BuildUtils`)
+## The Qt viewer
 
-## CMake module map
+| Class | File | Role |
+|-------|------|------|
+| `Viewer` | `Viewer.h`, `Viewer.cpp`, `Viewer.ui` | Main window. Owns the `Simulator` and a `Trigger`, starts both, and on each frame draws the current position into the label. The **hold** button stops and restarts the `Trigger`. |
+| `Trigger` | `Trigger.h` | Wraps a precise `QTimer` and emits `frameReady` every 1000/`fps` ms (16 ms). |
+| `Imager` | `Imager.h`, `Imager.cpp` | Draws one frame: a cached grey gradient of 2736 × 2192 px, the rod and the bob. |
+
+The simulation thread and the redraw timer are independent. The viewer
+samples the position; it does not drive the physics.
+
+## Targets and names
+
+| Kind | Pattern | Here |
+|------|---------|------|
+| CMake package | `Pendulum` | `find_package(Pendulum)` |
+| Alias target | `Pendulum::<Lib>` | `Pendulum::Pendulum` |
+| Raw target | `<lib>`, lowercase | `pendulum` |
+| Library file | `<Lib>` | `libPendulum.so` |
+| Test executable | `test_<raw>` | `test_pendulum` |
+| Include path | `<Lib>/<Header>.h` | `#include <Pendulum/Pendulum.h>` |
+| Export header, macro | `<Lib>_export.h`, `<LIB>_API` | `Pendulum_export.h`, `PENDULUM_API`, generated in the build tree |
+| Namespace | `<Lib>` | `Pendulum::Simulator` |
+
+## CMake modules
 
 | Module | Role |
 |--------|------|
-| `cmake/Common.cmake` | Standards, module includes, testing/Qt toggles |
+| `cmake/Common.cmake` | C++ standard, module includes, testing and Qt switches |
 | `cmake/BuildUtils.cmake` | `create_library`, `create_application` |
-| `cmake/modules/LibraryGenerator.cmake` | Scaffold from `cmake/template/` |
-| `cmake/modules/CompilerWarnings.cmake` | Strict warnings as errors |
-| `cmake/modules/Coverage.cmake` | gcov / lcov target |
-| `cmake/modules/InstallConfig.cmake` | `find_package(Motion)` export |
-| `cmake/GTestSupport.cmake` | Pinned GoogleTest via FetchContent |
+| `cmake/modules/LibraryGenerator.cmake` | Scaffold from `cmake/template/` ([adding libraries](ADDING_LIBRARIES.md)) |
+| `cmake/modules/CompilerWarnings.cmake` | Warnings as errors, per target |
+| `cmake/modules/Coverage.cmake` | gcov and lcov `coverage` target |
+| `cmake/modules/InstallConfig.cmake` | Install rules and `PendulumConfig.cmake` |
+| `cmake/GTestSupport.cmake` | GoogleTest v1.15.2 via FetchContent |
+| `cmake/QtSupport.cmake` | Finds Qt 6, falling back to Qt 5 |
 | `cmake/TestUtils.cmake` | `build_gtest_executable` |
 
-## Naming conventions
+## Known issues
 
-| Kind | Pattern | Example |
-|------|---------|---------|
-| CMake alias | `Motion::<Lib>` | `Motion::Core` |
-| Raw target | lowercase with `_` | `motion_core` |
-| Test executable | `test_<raw>` | `test_motion_core` |
-| Export header | `Motion_<Lib>_export.h` | generated in build tree |
-| Namespaces | `Motion::<Lib>` | `Motion::Core::multiply` |
-
-## Dependency rules
-
-1. `applications/` may depend on `Motion::*` libraries.
-2. Libraries may depend on other `Motion::*` libraries only through **public** or **private** CMake dependency lists — never by including another library’s `src/`.
-3. Tests link the library under test + GoogleTest; they must not include `*_impl` headers unless testing internals on purpose.
-4. Third-party packages are introduced via `find_package` / FetchContent with **pinned** versions.
-
-## Why generate-on-configure still exists
-
-`GENERATE_SCAFFOLD` creates missing libraries from templates so adding a component is one list edit. The default `Core` library is **committed** so CI and clones work without relying on generation side effects.
-
-## Out of scope (intentionally)
-
-- Full application framework / DI container
-- Package manager lockfiles for system Qt installs
-- Cross-compilation toolchains (add via your own CMake toolchain file)
+- **Data race on the position.** The worker thread writes `angle`, `pos_x` and
+  `pos_y` as plain floats while the viewer reads them through `position()`
+  (`libraries/Pendulum/src/Pendulum_impl.h`). Fix: guard the state with a
+  mutex or publish the position atomically.
+- **`set_hold(false)` does not resume.** The worker loop ends on hold;
+  only `start()` restarts it. The header comment says "Pause / resume".
+- **Scene size in the physics library.** `width` and `height` describe the
+  viewer's image, not the pendulum, but live in `Constants.h`.

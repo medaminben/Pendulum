@@ -1,49 +1,55 @@
-# Contributing
+# Contributing to Pendulum
 
-## Setup
+Bug reports, ideas and pull requests are welcome.
 
-```bash
-cmake --preset default
-cmake --build --preset default
-ctest --preset default
+## Reporting bugs and asking for features
 
-# Git hooks (format + commit lint)
-npm install
-```
+Open an [issue](https://github.com/medaminben/Pendulum/issues/new). For a bug,
+say which program (`Pendulum_Console`, `Pendulum_Qt_UI` or the library), your
+OS, compiler, CMake and Qt versions, and the steps that show it.
 
-Hooks:
+Do not report security problems in a public issue; [SECURITY.md](SECURITY.md)
+explains how to report them privately.
 
-- **pre-commit** — lint-staged runs clang-format on staged C++ files and a light CMake style check
-- **commit-msg** — Commitlint enforces Conventional Commits
+## Making a change
 
-## Coding standards
+1. Fork the repository and create a branch from `master`.
+2. Build and run the tests:
 
-- C++20, no compiler extensions (`CMAKE_CXX_EXTENSIONS OFF`)
-- Format with clang-format (Google-based style in `.clang-format`)
-- Static analysis via `.clang-tidy` (optional locally: `-DENABLE_CLANG_TIDY=ON`)
-- Warnings are errors on library and app targets
+   ```bash
+   cmake --preset default
+   cmake --build --preset default
+   ctest --preset default --output-on-failure
+   ```
 
-### Naming
+3. Add or update tests for what you change. Test through the public API.
+4. Update the documentation (`README.md`, `docs/architecture.md`,
+   `libraries/Pendulum/README.md`) when behaviour, build options or the public
+   API change.
+5. Open a pull request against `master`.
+
+`npm install` sets up the Git hooks:
+
+- **pre-commit**: lint-staged runs clang-format on staged C++ files and a
+  CMake style check.
+- **commit-msg**: Commitlint checks the commit message.
+
+## Code style
+
+- C++20 without compiler extensions; warnings are errors on library and app
+  targets.
+- Format with clang-format (`.clang-format`, Google-based):
+  `npm run format:check`.
+- clang-tidy (`.clang-tidy`) runs in CI; locally use `-DENABLE_CLANG_TIDY=ON`.
+- Public headers under `include/<Lib>/`, private code in `src/`.
 
 | Item | Style |
 |------|-------|
-| Namespaces / types | `CamelCase` |
-| Functions / variables | `lower_case` |
-| Test executables | `test_*` and fully lowercase |
-| Test cases | `TEST(test_<lib>_<Area>, Behavior)` |
+| Namespaces, types | `CamelCase` |
+| Functions, variables | `lower_case` |
+| Test executables | `test_*`, all lowercase |
 
-## Testing
-
-Every library should ship tests under `libraries/<Lib>/test/`.
-
-```bash
-ctest --preset default --output-on-failure
-ctest --preset default -L unit
-```
-
-Prefer testing through the **public API**. Add edge cases when changing behavior.
-
-Coverage (GCC/Clang + lcov):
+Coverage with GCC and lcov:
 
 ```bash
 cmake --preset coverage
@@ -52,38 +58,25 @@ cmake --build --preset coverage --target coverage
 # open build/coverage/coverage/html/index.html
 ```
 
-## Commit messages
+## Commits
 
-Format:
+Use [Conventional Commits](https://www.conventionalcommits.org/):
+`type(scope): what changed`, for example `fix(pendulum): join worker on stop`.
+Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`,
+`build`, `ci`, `chore`, `revert`.
 
-```
-<type>(optional-scope): <description>
+## Pull requests
 
-[optional body]
-```
+CI checks formatting, commit messages, CMake style, and builds and tests with
+GCC and Clang on Ubuntu. A pull request is merged once CI is green and a
+maintainer has reviewed it.
 
-Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+## Code of conduct
 
-Examples:
+Everyone taking part in this project follows the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
-```
-feat(core): add clamp helper
-fix(build): pin googletest to v1.15.2
-docs: describe scaffold workflow
-ci: add CodeQL analyze step
-```
+## License
 
-## Pull request checklist
-
-- [ ] Builds with `cmake --preset default`
-- [ ] Tests pass (`ctest --preset default`)
-- [ ] New/changed public API has tests
-- [ ] clang-format clean (`npm run format:check` if available)
-- [ ] Commit messages are conventional
-- [ ] Docs updated when behavior or workflow changes
-
-## Security
-
-- Do not commit secrets, machine-local Qt paths, or `cmake/configs/env_vars.ini`
-- Prefer pinned FetchContent tags over branch names (`main`/`master`)
-- Run / respect CI security jobs (cppcheck, CodeQL) before merging risky changes
+By contributing you agree that your contributions are licensed under the
+[MIT License](LICENSE).
