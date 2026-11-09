@@ -5,7 +5,7 @@
 1. Edit the root `CMakeLists.txt` and append a name:
 
 ```cmake
-set(MOTION_LIBRARIES Core Math)
+set(PENDULUM_LIBRARIES Pendulum Math)
 ```
 
 2. Reconfigure:
@@ -19,7 +19,7 @@ cmake --preset default
 ```
 libraries/Math/
   CMakeLists.txt
-  include/Motion/Math/Math.h
+  include/Math/Math.h
   src/Math.cpp
   src/Math_impl.h
   src/Math_impl.cpp
@@ -44,13 +44,13 @@ ctest --preset default --output-on-failure
 
 | Location | Visibility | Include style |
 |----------|------------|---------------|
-| `include/Motion/<Lib>/` | Public | `#include <Motion/Lib/Lib.h>` |
+| `include/<Lib>/` | Public | `#include <Lib/Lib.h>` |
 | `src/` | Private | `#include "Lib_impl.h"` |
 
 Keep export macros on public symbols only:
 
 ```cpp
-int MOTION_MATH_API multiply(int lhs, int rhs);
+int MATH_API multiply(int lhs, int rhs);
 ```
 
 ## Wire custom dependencies

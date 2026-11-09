@@ -22,17 +22,17 @@ if(LCOV_PATH AND GENHTML_PATH)
     add_custom_target(coverage
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
         COMMAND ${LCOV_PATH}
-            --ignore-errors mismatch,gcov,unused,empty
+            --ignore-errors mismatch,gcov,unused,empty,inconsistent
             --directory ${CMAKE_BINARY_DIR}
             --zerocounters
         COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
         COMMAND ${LCOV_PATH}
-            --ignore-errors mismatch,gcov,unused,empty
+            --ignore-errors mismatch,gcov,unused,empty,inconsistent
             --directory ${CMAKE_BINARY_DIR}
             --capture
             --output-file ${CMAKE_BINARY_DIR}/coverage/coverage.info
         COMMAND ${LCOV_PATH}
-            --ignore-errors mismatch,gcov,unused,empty
+            --ignore-errors mismatch,gcov,unused,empty,inconsistent
             --remove ${CMAKE_BINARY_DIR}/coverage/coverage.info
             '/usr/*' '*/_deps/*' '*/test/*' '*/googletest/*'
             --output-file ${CMAKE_BINARY_DIR}/coverage/coverage.filtered.info

@@ -1,9 +1,8 @@
-#ifndef MOTION_PENDULUM_CONSTANTS_H
-#define MOTION_PENDULUM_CONSTANTS_H
+#ifndef PENDULUM_CONSTANTS_H
+#define PENDULUM_CONSTANTS_H
 
 #include <cstddef>
 
-namespace Motion {
 namespace Pendulum {
 
 constexpr float gravity = 9.8F;
@@ -14,6 +13,5 @@ constexpr std::size_t width = 2736;
 constexpr std::size_t height = 2192;
 
 }  // namespace Pendulum
-}  // namespace Motion
 
-#endif  // MOTION_PENDULUM_CONSTANTS_H
+#endif  // PENDULUM_CONSTANTS_H

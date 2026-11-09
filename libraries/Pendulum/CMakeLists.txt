@@ -7,8 +7,8 @@ find_package(Threads REQUIRED)
 
 set(TARGET_HEADERS
     src/${TARGET_NAME}_impl.h
-    include/${CMAKE_ROOT_NAME}/${TARGET_NAME}/Constants.h
-    include/${CMAKE_ROOT_NAME}/${TARGET_NAME}/${TARGET_NAME}.h
+    include/${TARGET_NAME}/Constants.h
+    include/${TARGET_NAME}/${TARGET_NAME}.h
 )
 
 set(TARGET_SOURCES

@@ -1,5 +1,5 @@
 //Include Project headrs
-#include <${lib_ROOT_NAME}/${lib_NAME}/${lib_NAME}.h>
+#include <${lib_NAME}/${lib_NAME}.h>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
@@ -22,9 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::CoreAnswer() {
     QString message = QString::fromStdString("Do you know that 6 time 6 is equal to " 
-                                        + std::to_string(${lib_ROOT_NAME}::${lib_NAME}::multiply(6,6)));
+                                        + std::to_string(${lib_NAME}::multiply(6,6)));
     QString title =  QString::fromStdString("The answer is " 
-                                            + std::to_string(${lib_ROOT_NAME}::${lib_NAME}::get_the_answer()));
+                                            + std::to_string(${lib_NAME}::get_the_answer()));
     QMessageBox::information(this,title, message, QMessageBox::Ok);
 }
 MainWindow::~MainWindow()

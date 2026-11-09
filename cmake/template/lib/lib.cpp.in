@@ -1,8 +1,7 @@
 #include "${lib_NAME}_impl.h"
 
-#include <${lib_ROOT_NAME}/${lib_NAME}/${lib_NAME}.h>
+#include <${lib_NAME}/${lib_NAME}.h>
 
-namespace ${lib_ROOT_NAME} {
 namespace ${lib_NAME} {
 
 unsigned int get_the_answer() {
@@ -14,4 +13,3 @@ int multiply(int lhs, int rhs) {
 }
 
 }  // namespace ${lib_NAME}
-}  // namespace ${lib_ROOT_NAME}

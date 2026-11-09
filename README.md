@@ -1,43 +1,41 @@
-# Pendulum Simulation
+<h1 align="center">Pendulum</h1>
+
+<p align="center">
+  <a href="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-00599C">
+  <img alt="CMake 3.29" src="https://img.shields.io/badge/CMake-3.29-064F8C">
+  <img alt="Qt 5 | 6" src="https://img.shields.io/badge/Qt-5%20%7C%206-41CD52">
+  <img alt="GoogleTest" src="https://img.shields.io/badge/tests-GoogleTest-4285F4">
+  <img alt="platform: Linux" src="https://img.shields.io/badge/platform-Linux-555">
+  <a href="LICENSE"><img alt="license: MIT" src="https://img.shields.io/github/license/medaminben/Pendulum"></a>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="docs/">Docs</a> ·
+  <a href="docs/architecture.md">Architecture</a> ·
+  <a href="docs/CI_CD.md">CI/CD</a>
+</p>
+
+Pendulum simulates a simple pendulum. The `Pendulum::Pendulum` library steps the
+physics on a background thread at 60 steps per second; the Qt viewer draws the
+rod and the bob, and the console app prints the first ten positions.
 
 https://github.com/user-attachments/assets/afd8e139-eb02-4788-b706-54277f482d8d
 
-Physics library and Qt viewer for a simple pendulum, structured with the [Motion](docs/ARCHITECTURE.md) template: public library API, private implementation, console/Qt apps, tests, install/export, and CI.
-
-## Layout
-
-```
-Pendulum/
-├── applications/Pendulum/
-│   ├── Pendulum_Console/   # CLI demo (library consumer)
-│   └── Pendulum_Qt_UI/     # Qt Viewer (UI only)
-├── libraries/Pendulum/     # Business logic (Motion::Pendulum)
-│   ├── include/            # Public API
-│   ├── src/                # Private implementation
-│   └── test/               # GoogleTest
-├── cmake/                  # Motion build helpers + scaffolds
-└── .github/workflows/      # CI + release
-```
-
-## Requirements
-
-| Tool | Version |
-|------|---------|
-| CMake | ≥ 3.29 |
-| C++ compiler | GCC 12+, Clang 15+, or MSVC 19.3+ |
-| Qt 5/6 | for `BUILD_QT_UI` / preset `qt` |
-
 ## Quick start
 
+Debian/Ubuntu:
+
 ```bash
+sudo apt install build-essential cmake git
 cmake --preset default
 cmake --build --preset default
-ctest --preset default --output-on-failure
-
+ctest --preset default
 ./build/default/bin/Pendulum_Console
 ```
 
-Qt viewer:
+The Qt viewer needs Qt 5 or 6 (`sudo apt install qt6-base-dev`):
 
 ```bash
 cmake --preset qt
@@ -45,63 +43,89 @@ cmake --build --preset qt
 ./build/qt/bin/Pendulum_Qt_UI
 ```
 
-## Library usage
+The **hold** button stops and restarts the redraw; the simulation keeps running
+in the background.
+
+## Requirements
+
+| Tool | Version |
+|------|---------|
+| CMake | 3.29 or newer |
+| C++ compiler | C++20: GCC 12+ or Clang 15+ (CI uses GCC and Clang 18 on Ubuntu) |
+| Qt | 5 or 6, only for the viewer (`BUILD_QT_UI=ON`, preset `qt`) |
+
+GoogleTest v1.15.2 is downloaded at configure time.
+
+## Repository layout
+
+```
+Pendulum/
+├── libraries/Pendulum/        Pendulum::Pendulum, the physics library
+│   ├── include/Pendulum/      public headers
+│   ├── src/                       private implementation
+│   └── test/                      GoogleTest
+├── applications/Pendulum/
+│   ├── Pendulum_Console/      prints ten simulation steps
+│   └── Pendulum_Qt_UI/        Qt viewer
+├── cmake/                     build helpers and library scaffolds
+└── .github/workflows/         CI and release
+```
+
+## Using the library
 
 ```cpp
-#include <Motion/Pendulum/Pendulum.h>
+#include <Pendulum/Pendulum.h>
 
-Motion::Pendulum::Simulator sim({150.0F, 500.0F});
-sim.start();
+Pendulum::Simulator sim({150.0F, 500.0F});  // bob position in scene pixels
+sim.step();                                          // or sim.start() for the 60 Hz thread
 auto const [x, y] = sim.position();
 ```
 
-Consumers link `Motion::Pendulum`.
+The [library README](libraries/Pendulum/README.md) describes the API, the
+coordinates and the threading rules.
 
-## Install / deploy
+Installed, the library is found with:
+
+```cmake
+find_package(Pendulum REQUIRED)
+target_link_libraries(my_app PRIVATE Pendulum::Pendulum)
+```
 
 ```bash
 cmake --preset default -DCMAKE_INSTALL_PREFIX=$PWD/install
 cmake --build --preset default
-ctest --preset default --output-on-failure
 cmake --install build/default
 ```
-
-With Qt UI included in the package:
-
-```bash
-cmake --preset qt -DCMAKE_INSTALL_PREFIX=$PWD/install
-cmake --build --preset qt
-cmake --install build/qt
-```
-
-Downstream:
-
-```cmake
-find_package(Motion REQUIRED)
-target_link_libraries(my_app PRIVATE Motion::Pendulum)
-```
-
-Tagged releases (`v*`) build, test, install, and publish a Linux tarball via `.github/workflows/release.yml`.
 
 ## Build options
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `BUILD_SHARED_LIBS` | `ON` | Shared vs static libraries |
-| `BUILD_APPS` | `ON` | Build applications |
-| `BUILD_TESTING` | `ON` | Unit tests |
+| `BUILD_SHARED_LIBS` | `ON` | Shared or static libraries |
+| `BUILD_APPS` | `ON` | Build the applications |
+| `BUILD_TESTING` | `ON` | Build and register the unit tests |
 | `BUILD_QT_UI` | `OFF` | Build `Pendulum_Qt_UI` |
 | `ENABLE_COVERAGE` | `OFF` | gcov instrumentation |
+| `ENABLE_CLANG_TIDY` | `OFF` | Run clang-tidy while compiling |
+| `GENERATE_SCAFFOLD` | `ON` | Create missing libraries from `cmake/template/` |
 
 ## Documentation
 
-| Doc | Topic |
-|-----|-------|
-| [Architecture](docs/ARCHITECTURE.md) | Layers and dependency rules |
-| [Adding libraries](docs/ADDING_LIBRARIES.md) | Scaffold workflow |
-| [Contributing](docs/CONTRIBUTING.md) | Style and commits |
-| [CI/CD](docs/CI_CD.md) | Pipelines and presets |
+| Document | For | Topic |
+|----------|-----|-------|
+| [docs/README.md](docs/README.md) | everyone | Index of all documents |
+| [Architecture](docs/architecture.md) | developers | Layers, targets, threading, dependency rules |
+| [Pendulum library](libraries/Pendulum/README.md) | library users | API, coordinates, invariants |
+| [Adding libraries](docs/ADDING_LIBRARIES.md) | developers | Scaffolding a new library |
+| [CI/CD](docs/CI_CD.md) | maintainers | Workflows, presets, releases |
+| [Contributing](CONTRIBUTING.md) | contributors | Workflow, style, commits |
+
+## Contributing
+
+Bug reports and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md)
+and the [Code of Conduct](CODE_OF_CONDUCT.md). Report security problems as
+described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+[MIT](LICENSE)

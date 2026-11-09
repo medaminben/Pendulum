@@ -1,9 +1,9 @@
 include(GTestSupport)
 
 # build_gtest_executable(
-#   NAME test_motion_core
+#   NAME test_pendulum
 #   SRC  test/src/test_Core.cpp
-#   DEPENDS Motion::Core GTest::gtest ...
+#   DEPENDS Pendulum::Pendulum GTest::gtest ...
 #   DISCOVER ON
 # )
 function(build_gtest_executable)

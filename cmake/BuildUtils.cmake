@@ -32,10 +32,9 @@ macro(add_project name name_list)
     list(APPEND ${name_list} ${name})
 endmacro()
 
-# Convert "Motion::Core" -> "motion_core" for add_library().
-macro(get_raw_target_name qualified_name out_var)
-    string(REPLACE "::" "_" ${out_var} ${qualified_name})
-    string(TOLOWER ${${out_var}} ${out_var})
+# Convert a library name ("Pendulum") to its raw target name ("pendulum").
+macro(get_raw_target_name name out_var)
+    string(TOLOWER ${name} ${out_var})
 endmacro()
 
 # ---------------------------------------------------------------------------
@@ -55,7 +54,7 @@ function(create_library)
 
     if(DEFINED CMAKE_ROOT_NAME AND NOT CMAKE_ROOT_NAME STREQUAL "")
         set(LIBRARY_NAME ${CMAKE_ROOT_NAME}::${parameter_LIB_NAME})
-        get_raw_target_name(${LIBRARY_NAME} LIBRARY_NAME_RAW)
+        get_raw_target_name(${parameter_LIB_NAME} LIBRARY_NAME_RAW)
     else()
         set(LIBRARY_NAME ${parameter_LIB_NAME})
         set(LIBRARY_NAME_RAW ${LIBRARY_NAME})
@@ -65,18 +64,17 @@ function(create_library)
     add_library(${LIBRARY_NAME} ALIAS ${LIBRARY_NAME_RAW})
 
     include(GenerateExportHeader)
-    string(TOUPPER ${CMAKE_ROOT_NAME} ROOT_FLAG)
     string(TOUPPER ${parameter_LIB_NAME} LIB_FLAG)
 
     set(_export_dir
-        "${CMAKE_CURRENT_BINARY_DIR}/include/${CMAKE_ROOT_NAME}/${parameter_LIB_NAME}")
+        "${CMAKE_CURRENT_BINARY_DIR}/include/${parameter_LIB_NAME}")
     file(MAKE_DIRECTORY "${_export_dir}")
 
     generate_export_header(${LIBRARY_NAME_RAW}
         EXPORT_FILE_NAME
-            "${_export_dir}/${CMAKE_ROOT_NAME}_${parameter_LIB_NAME}_export.h"
-        EXPORT_MACRO_NAME ${ROOT_FLAG}_${LIB_FLAG}_API
-        BASE_NAME ${ROOT_FLAG}_${LIB_FLAG}
+            "${_export_dir}/${parameter_LIB_NAME}_export.h"
+        EXPORT_MACRO_NAME ${LIB_FLAG}_API
+        BASE_NAME ${LIB_FLAG}
         DEFINE_NO_DEPRECATED
     )
 
@@ -92,10 +90,10 @@ function(create_library)
         PUBLIC  ${parameter_PUBLIC_DEPENDENCIES}
     )
 
-    motion_set_warnings(${LIBRARY_NAME_RAW})
+    pendulum_set_warnings(${LIBRARY_NAME_RAW})
 
     set_target_properties(${LIBRARY_NAME_RAW} PROPERTIES
-        OUTPUT_NAME "${CMAKE_ROOT_NAME}${parameter_LIB_NAME}"
+        OUTPUT_NAME "${parameter_LIB_NAME}"
         EXPORT_NAME "${parameter_LIB_NAME}"
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -159,7 +157,7 @@ function(create_application)
         if(DEFINED app_DEPENDENCIES AND NOT app_DEPENDENCIES STREQUAL "")
             target_link_libraries(${app_NAME} PRIVATE ${app_DEPENDENCIES})
         endif()
-        motion_set_warnings(${app_NAME})
+        pendulum_set_warnings(${app_NAME})
 
     elseif(BUILD_QT_UI AND app_ENTRY STREQUAL "QT_ui")
         qt_add_executable(${app_NAME} ${app_BUILD_ARGS} ${PROJECT_FILES})
@@ -170,6 +168,6 @@ function(create_application)
             WIN32_EXECUTABLE TRUE
             MACOSX_BUNDLE TRUE
         )
-        motion_set_warnings(${app_NAME})
+        pendulum_set_warnings(${app_NAME})
     endif()
 endfunction()
