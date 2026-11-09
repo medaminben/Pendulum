@@ -47,7 +47,7 @@ Format / commit checks (needs Node + clang-format):
 ```bash
 npm install
 npm run format:check
-npx commitlint --from origin/master --to HEAD --verbose
+npx commitlint --from origin/main --to HEAD --verbose
 ```
 
 ## Presets

@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Only the latest commit on `master` gets security fixes.
+Only the latest commit on `main` gets security fixes.
 
 ## Reporting a vulnerability
 

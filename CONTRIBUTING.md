@@ -13,7 +13,7 @@ explains how to report them privately.
 
 ## Making a change
 
-1. Fork the repository and create a branch from `master`.
+1. Fork the repository and create a branch from `main`.
 2. Build and run the tests:
 
    ```bash
@@ -26,7 +26,7 @@ explains how to report them privately.
 4. Update the documentation (`README.md`, `docs/architecture.md`,
    `libraries/Pendulum/README.md`) when behaviour, build options or the public
    API change.
-5. Open a pull request against `master`.
+5. Open a pull request against `main`.
 
 `npm install` sets up the Git hooks:
 

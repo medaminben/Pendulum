@@ -1,7 +1,7 @@
 <h1 align="center">Pendulum</h1>
 
 <p align="center">
-  <a href="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml/badge.svg?branch=master"></a>
+  <a href="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/medaminben/Pendulum/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-00599C">
   <img alt="CMake 3.29" src="https://img.shields.io/badge/CMake-3.29-064F8C">
   <img alt="Qt 5 | 6" src="https://img.shields.io/badge/Qt-5%20%7C%206-41CD52">
