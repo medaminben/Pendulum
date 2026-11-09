@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   release:
-    uses: medaminben/buildkit/.github/workflows/release.yml@v2.0.0
+    uses: medaminben/buildkit/.github/workflows/release.yml@v2.0.1
     permissions:
       contents: write
       actions: write

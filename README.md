@@ -60,7 +60,7 @@ in the background.
 | Qt | 5 or 6, only for the viewer (`BUILD_QT_UI=ON`, preset `qt`) |
 
 CMake loads [buildkit](https://github.com/medaminben/buildkit) from `BUILDKIT_DIR`, else a sibling checkout
-`../buildkit`, else it fetches the pinned tag `v2.0.0`. GoogleTest v1.15.2 is
+`../buildkit`, else it fetches the pinned tag `v2.0.1`. GoogleTest v1.15.2 is
 used when installed and fetched otherwise.
 
 ## Repository layout

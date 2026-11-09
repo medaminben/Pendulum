@@ -64,7 +64,7 @@ samples the position; it does not drive the physics.
 
 ## Build
 
-The CMake modules come from [buildkit](https://github.com/medaminben/buildkit), pinned to `v2.0.0` in
+The CMake modules come from [buildkit](https://github.com/medaminben/buildkit), pinned to `v2.0.1` in
 `cmake/buildkit.cmake`. Pendulum uses its flat layout (no `CMAKE_ROOT_NAME`):
 
 | Pendulum file | Role |

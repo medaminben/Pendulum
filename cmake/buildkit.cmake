@@ -26,7 +26,7 @@
 include_guard(GLOBAL)
 
 if(NOT DEFINED BUILDKIT_TAG)
-    set(BUILDKIT_TAG "v2.0.0")
+    set(BUILDKIT_TAG "v2.0.1")
 endif()
 if(NOT DEFINED BUILDKIT_REPOSITORY)
     set(BUILDKIT_REPOSITORY "https://github.com/medaminben/buildkit.git")

@@ -1,6 +1,7 @@
 # Builds and tests Pendulum through buildkit's reusable CI workflow: the "ci"
 # preset (library and console app) and the "qt" preset (with the Qt viewer),
-# each with GCC and Clang, plus the asan preset, lint and static analysis.
+# each with GCC and Clang, plus the coverage and asan presets, lint and
+# static analysis.
 name: CI
 
 on:
@@ -21,18 +22,13 @@ concurrency:
 
 jobs:
   ci:
-    uses: medaminben/buildkit/.github/workflows/ci.yml@v2.0.0
+    uses: medaminben/buildkit/.github/workflows/ci.yml@v2.0.1
     permissions:
       contents: read
     with:
       presets: "ci qt"
       compilers: "gcc clang"
-      # clang-tools-18 provides clang-scan-deps for the Clang build; buildkit
-      # v2.0.1 installs it itself, then it can go.
-      apt-packages: "qt6-base-dev clang-tools-18"
+      apt-packages: "qt6-base-dev"
       sanitizers: true
       static-analysis: true
-      # buildkit v2.0.0's coverage target fails on the current runner: lcov 2
-      # stops on GCC 15 line mismatches in GoogleTest macros ("inconsistent").
-      # Turn it on once buildkit ignores that error.
-      coverage: false
+      coverage: true
