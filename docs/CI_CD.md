@@ -1,76 +1,49 @@
 # CI / CD
 
-## Pipelines
+The workflows call [buildkit](https://github.com/medaminben/buildkit)'s reusable workflows at `v2.0.0`. Their
+inputs and behaviour are described in buildkit's
+[CI/CD guide](https://github.com/medaminben/buildkit/blob/main/docs/CI_CD.md).
 
-### Continuous integration — `.github/workflows/ci.yml`
+## Workflows
 
-Triggers: push and pull request to `main` / `master` / `develop`.
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| `ci.yml` | push to `main` and `feature/**`, pull requests to `main` | Lint (clang-format, CMake style, commitlint), build and test the `ci` and `qt` presets with GCC and Clang, the `asan` preset, clang-tidy and cppcheck (report only) |
+| `codeql.yml` | push and pull requests to `main` | CodeQL analysis of the `default` preset |
+| `release.yml` | pull request merged into `main` | Tags the merge commit and creates the GitHub release |
 
-| Job | Purpose |
-|-----|---------|
-| **Format** | `clang-format --dry-run --Werror` on tracked C++ sources |
-| **Lint** | Commitlint (PR range), CMake style script, optional clang-tidy |
-| **Build & Test** | Matrix: GCC and Clang via `cmake --preset ci` + `ctest` |
-| **Coverage** | GCC job builds `coverage` target and uploads HTML + lcov artifacts |
-| **Qt UI** | Builds and tests with `ci-qt` (Qt 6), then installs the package tree |
-| **Security** | cppcheck (advisory) + CodeQL analyze |
+Coverage is off in `ci.yml`: buildkit `v2.0.0`'s coverage target stops on lcov
+2's "inconsistent" error with GCC 15. It is turned on again once buildkit
+ignores that error.
 
-### Release — `.github/workflows/release.yml`
+## Releases
 
-Trigger: push tag matching `v*` (example: `v1.0.0`).
-
-1. Configure the `qt` preset (Qt 6) with an install prefix
-2. Build and test
-3. `cmake --install`
-4. Pack `pendulum-<tag>-linux-amd64.tar.gz`
-5. Create GitHub Release with notes + artifact
-
-```bash
-git tag -a v1.0.0 -m "chore(release): v1.0.0"
-git push origin v1.0.0
-```
-
-## Local parity
-
-```bash
-# same preset CI uses
-cmake --preset ci
-cmake --build --preset ci --parallel
-ctest --preset ci --output-on-failure
-
-# or helper script
-./scripts/ci-build.sh ci
-```
-
-Format / commit checks (needs Node + clang-format):
-
-```bash
-npm install
-npm run format:check
-npx commitlint --from origin/main --to HEAD --verbose
-```
+Each merged pull request is released. Its label sets the version bump:
+`semver:major`, `semver:minor`, `semver:patch` (the default) or `semver:none`
+(no release). The first release is `v0.1.0`. The release notes are the commit
+subjects since the previous tag. `CMakeLists.txt` reads the version from the
+latest `vX.Y.Z` tag; without tags it is `0.1.0-dev`.
 
 ## Presets
 
 | Preset | Use |
 |--------|-----|
-| `default` | Release build (Unix Makefiles) |
-| `qt` | `default` + `BUILD_QT_UI` |
-| `ninja` | Release with Ninja |
-| `debug` | Debug symbols |
-| `coverage` | Debug + `ENABLE_COVERAGE` |
-| `ci` | RelWithDebInfo + coverage flags |
-| `ci-qt` | `ci` + `BUILD_QT_UI` |
+| `default` | Release build |
+| `qt` | Release build with the Qt viewer |
+| `debug` | Debug build |
+| `coverage` | Debug build with gcov; `--target coverage` writes the HTML report |
+| `asan` | Debug build with AddressSanitizer and UndefinedBehaviorSanitizer |
+| `ci` | Release build used by CI |
 
-## Artifacts
+All presets use Ninja and build into `build/<preset>`.
 
-CI may upload:
+## Local checks
 
-- `coverage-report` — HTML from genhtml
-- `coverage-lcov` — filtered `coverage.filtered.info`
+```bash
+cmake --preset ci
+cmake --build --preset ci
+ctest --preset ci
 
-Release uploads the install tarball to the GitHub Release.
-
-## Secrets
-
-No custom secrets are required for the default workflows. Releases use `GITHUB_TOKEN` provided by Actions.
+npm install            # commit hooks
+npm run format:check
+```

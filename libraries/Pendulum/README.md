@@ -1,6 +1,6 @@
 # Pendulum library
 
-`Pendulum::Pendulum` (raw target `pendulum`, namespace `Pendulum`) simulates a simple pendulum.
+`Pendulum::Pendulum` (raw target `Pendulum`, namespace `Pendulum`) simulates a simple pendulum.
 It has no UI and no rendering code. The applications read the bob position and
 draw it.
 
