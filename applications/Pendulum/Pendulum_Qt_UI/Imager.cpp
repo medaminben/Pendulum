@@ -48,12 +48,15 @@ QImage createPendulumImage(float bob_x, float bob_y, float pin_x, float pin_y) {
 
     int const marker_size = static_cast<int>(0.025 * static_cast<double>(std::min(width, height)));
 
+    QPointF const pin(static_cast<qreal>(pin_x), static_cast<qreal>(pin_y));
+    QPointF const bob(static_cast<qreal>(bob_x), static_cast<qreal>(bob_y));
+
     QPainter painter(&image);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(QPen(Qt::black, 4));
-    painter.drawLine(QPointF(pin_x, pin_y), QPointF(bob_x, bob_y));
+    painter.drawLine(pin, bob);
     painter.setBrush(Qt::black);
-    painter.drawEllipse(QPointF(bob_x, bob_y), marker_size, marker_size);
+    painter.drawEllipse(bob, marker_size, marker_size);
     painter.end();
 
     return image;

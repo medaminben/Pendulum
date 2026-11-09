@@ -1,74 +1,28 @@
-# Prerequisites
-*.d
+# Build trees: every preset builds into build/<preset>
+/build/
+CMakeUserPresets.json
+compile_commands.json
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Generated export headers belong in the build tree
+*_export.h
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled libraries / shared objects
-*.so
-*.dylib
-*.dll
-*.a
-*.lib
-*.lai
-*.la
-
-# Executables
-*.exe
-*.out
-*.app
-
-# IDE
+# Tools and editors
+.cache/
 .idea/
 .vscode/
 *.user
-CMakeLists.txt.user
-CMakeLists.txt.user.*
-cmake-build-*
-
-# Build trees
-build/
-install/
-_deps/
-cmake-build-*/
-Testing/
-CMakeCache.txt
-CMakeFiles/
-CMakeScripts/
-Makefile
-cmake_install.cmake
-install_manifest.txt
-CTestTestfile.cmake
-compile_commands.json
-*.log
+CMakeLists.txt.user*
 
 # Coverage
-coverage/
 *.gcda
 *.gcno
 *.gcov
 *.profraw
 *.profdata
 
-# Generated export headers (binary-dir preferred; ignore any in-tree leftovers)
-*_export.h
-
-# Node tooling
-node_modules/
-npm-debug.log*
-
-# Environment / machine-specific
-cmake/configs/env_vars.ini
-3rdParty/
-.cache/
-
 # OS
 .DS_Store
 Thumbs.db
+
+# Node tooling (commit hooks)
+node_modules/

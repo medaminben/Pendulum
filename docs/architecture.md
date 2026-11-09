@@ -1,6 +1,7 @@
 # Architecture
 
-Pendulum is one library and two applications on a small CMake template. The
+Pendulum is one library and two applications, built with
+[buildkit](https://github.com/medaminben/buildkit). The
 library steps the physics and reports the bob position; the applications
 print or draw that position.
 
@@ -54,26 +55,30 @@ samples the position; it does not drive the physics.
 |------|---------|------|
 | CMake package | `Pendulum` | `find_package(Pendulum)` |
 | Alias target | `Pendulum::<Lib>` | `Pendulum::Pendulum` |
-| Raw target | `<lib>`, lowercase | `pendulum` |
+| Raw target | `<Lib>` | `Pendulum` |
 | Library file | `<Lib>` | `libPendulum.so` |
-| Test executable | `test_<raw>` | `test_pendulum` |
+| Test executable | `test_<lib>`, lowercase | `test_pendulum` |
 | Include path | `<Lib>/<Header>.h` | `#include <Pendulum/Pendulum.h>` |
 | Export header, macro | `<Lib>_export.h`, `<LIB>_API` | `Pendulum_export.h`, `PENDULUM_API`, generated in the build tree |
 | Namespace | `<Lib>` | `Pendulum::Simulator` |
 
-## CMake modules
+## Build
 
-| Module | Role |
-|--------|------|
-| `cmake/Common.cmake` | C++ standard, module includes, testing and Qt switches |
-| `cmake/BuildUtils.cmake` | `create_library`, `create_application` |
-| `cmake/modules/LibraryGenerator.cmake` | Scaffold from `cmake/template/` ([adding libraries](ADDING_LIBRARIES.md)) |
-| `cmake/modules/CompilerWarnings.cmake` | Warnings as errors, per target |
-| `cmake/modules/Coverage.cmake` | gcov and lcov `coverage` target |
-| `cmake/modules/InstallConfig.cmake` | Install rules and `PendulumConfig.cmake` |
-| `cmake/GTestSupport.cmake` | GoogleTest v1.15.2 via FetchContent |
-| `cmake/QtSupport.cmake` | Finds Qt 6, falling back to Qt 5 |
-| `cmake/TestUtils.cmake` | `build_gtest_executable` |
+The CMake modules come from [buildkit](https://github.com/medaminben/buildkit), pinned to `v2.0.1` in
+`cmake/buildkit.cmake`. Pendulum uses its flat layout (no `CMAKE_ROOT_NAME`):
+
+| Pendulum file | Role |
+|---------------|------|
+| `CMakeLists.txt` | Loads buildkit, sets the version from git tags, options, library list |
+| `cmake/buildkit.cmake` | buildkit's loader, copied unchanged |
+| `cmake/QtSupport.cmake` | Finds Qt 6, falling back to Qt 5, for `BUILD_QT_UI` |
+| `libraries/Pendulum/CMakeLists.txt` | `create_library` |
+| `applications/Pendulum/Pendulum_Console/CMakeLists.txt` | `create_application` (Console) |
+| `applications/Pendulum/Pendulum_Qt_UI/CMakeLists.txt` | Plain `add_executable`; buildkit has no Qt entry |
+
+`create_library`, `create_application`, warnings, coverage, GoogleTest,
+install and the scaffold generator are buildkit's; see its
+[README](https://github.com/medaminben/buildkit#modules).
 
 ## Known issues
 
