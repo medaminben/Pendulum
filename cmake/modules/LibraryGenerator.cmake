@@ -34,14 +34,12 @@ function(generate_libraries)
             generate_library(
                 NAME        ${item}
                 DESTINATION ${lib_LIBRARIES_LOCATION}
-                ROOT_NAME   ${CMAKE_ROOT_NAME}
                 CFG_SRC     ${lib_TEMPLATE_LOCATION}
             )
         else()
             generate_library(
                 NAME        ${item}
                 DESTINATION ${lib_LIBRARIES_LOCATION}
-                ROOT_NAME   ${CMAKE_ROOT_NAME}
                 APPS_DIR    ${lib_APPS_LOCATION}
                 CFG_SRC     ${lib_TEMPLATE_LOCATION}
             )
@@ -52,7 +50,7 @@ endfunction()
 function(generate_library)
     set(options)
     set(list_args)
-    set(single_value_args NAME DESTINATION ROOT_NAME APPS_DIR CFG_SRC)
+    set(single_value_args NAME DESTINATION APPS_DIR CFG_SRC)
     cmake_parse_arguments(PARSE_ARGV 0 lib
         "${options}" "${single_value_args}" "${list_args}")
 
@@ -70,19 +68,12 @@ function(generate_library)
         return()
     endif()
 
-    if(NOT DEFINED lib_ROOT_NAME OR lib_ROOT_NAME STREQUAL "")
-        set(lib_ROOT_NAME ${lib_NAME})
-        message(WARNING
-            "${lib_NAME}: ROOT_NAME missing; defaulting to the library name")
-    endif()
-
     set(lib_include_DIR ${lib_DIR}/include/${lib_NAME})
     set(lib_source_DIR  ${lib_DIR}/src)
     set(lib_test_DIR    ${lib_DIR}/test)
     set(lib_gen_DIR     ${lib_CFG_SRC}/lib)
 
-    string(TOUPPER ${lib_ROOT_NAME} lib_ROOT_NAME_UPPER)
-    string(TOUPPER ${lib_NAME}      lib_NAME_UPPER)
+    string(TOUPPER ${lib_NAME} lib_NAME_UPPER)
 
     configure_file(${lib_gen_DIR}/lib_CMakeLists.txt.in ${lib_DIR}/CMakeLists.txt)
     configure_file(${lib_gen_DIR}/lib.h.in              ${lib_include_DIR}/${lib_NAME}.h)
