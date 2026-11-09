@@ -27,7 +27,9 @@ jobs:
     with:
       presets: "ci qt"
       compilers: "gcc clang"
-      apt-packages: "qt6-base-dev"
+      # clang-tools-18 provides clang-scan-deps for the Clang build; buildkit
+      # v2.0.1 installs it itself, then it can go.
+      apt-packages: "qt6-base-dev clang-tools-18"
       sanitizers: true
       static-analysis: true
       # buildkit v2.0.0's coverage target fails on the current runner: lcov 2
